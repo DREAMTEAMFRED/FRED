@@ -12,6 +12,7 @@ namespace FRED.Pages
         public void OnGet()
         {
             /// this is testing git hub
+            /// this is a second test hope it works
         }
 
         public void OnPostLogin(string username, string password)
