@@ -1,0 +1,20 @@
+﻿@page
+@model FRED.Pages.AddUserModel
+@{
+    ViewData["Title"] = "AddUser";
+}
+
+<div id="userGrid">
+    <header>
+        <h1 class="white">Add User Page</h1>
+    </header>
+    <div id="newUser">
+        <form id="newUserForm" method="post" asp-page-handler="NewUser">
+            <input type="text" name="username" placeholder="email address" required />
+            <input type="password" name="password" placeholder="password" required />
+            <input type="submit" value="Create Account" />
+        </form>
+    </div>
+</div>
+
+
