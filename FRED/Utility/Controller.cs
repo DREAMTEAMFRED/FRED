@@ -19,7 +19,7 @@ namespace FRED.Utility
                 SqlCommand login = new SqlCommand();
                 login.Connection = myConn;
                 myConn.Open();
-                login.Parameters.AddWithValue("@username", username);                
+                login.Parameters.AddWithValue("@username", username);
                 login.CommandText = ("[spLogin]");
                 login.CommandType = System.Data.CommandType.StoredProcedure;
                 var result = login.ExecuteScalar();
@@ -29,7 +29,7 @@ namespace FRED.Utility
                     // correct username check password
                     UserID = Convert.ToInt32(result);
                     SqlCommand verPass = new SqlCommand();
-                    verPass.Connection = myConn;                  
+                    verPass.Connection = myConn;
                     verPass.Parameters.AddWithValue("@userID", UserID);
                     verPass.CommandText = ("[spVerPass]");
                     verPass.CommandType = System.Data.CommandType.StoredProcedure;
@@ -44,10 +44,10 @@ namespace FRED.Utility
                     {
                         UserID = 0;
                         IsVerified = false; // wrong password
-                    }                    
+                    }
                 }
                 else
-                {                    
+                {
                     IsVerified = false;  // wrong username
                 }
 
@@ -55,6 +55,6 @@ namespace FRED.Utility
             }
         }//checkID()
 
-        
+
     }
 }

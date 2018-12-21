@@ -7,8 +7,8 @@ using System.Security.Cryptography;
 namespace FRED.Utility
 {
     public class Password
-    {       
-        private const int SaltSize = 16;        
+    {
+        private const int SaltSize = 16;
         private const int HashSize = 20;
 
         public static string Hash(string password, int iterations)
@@ -32,17 +32,17 @@ namespace FRED.Utility
             //format hash with extra information
             return string.Format("$MYHASH$V1${0}${1}", iterations, base64Hash);
         }
-        
+
         public string Hash(string password)
         {
             return Hash(password, 10000);
         }
-       
+
         public static bool IsHashSupported(string hashString)
         {
             return hashString.Contains("$MYHASH$V1$");
         }
-      
+
         public bool Verify(string password, string hashedPassword)
         {
             //check hash

@@ -29,7 +29,7 @@ namespace FRED.Pages
                 UserExists.CommandType = System.Data.CommandType.StoredProcedure;
                 var exists = UserExists.ExecuteScalar();
 
-                if(username == Convert.ToString(exists))
+                if (username == Convert.ToString(exists))
                 {
                     // username exists
                     Program.Controller.UserID = 0;
@@ -69,10 +69,10 @@ namespace FRED.Pages
                     myConn.Close();
                     Response.Redirect("./UserControls");
                 }
-                
+
             }
             //OnPostLogin(username, password);
-            
+
         }
 
         public void OnPostLogin(string username, string password)

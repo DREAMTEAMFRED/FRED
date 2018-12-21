@@ -6,7 +6,8 @@ body
     margin: 0 auto;
     padding-top: 10px;
     padding-bottom: 20px;
-    background: #1f2e45;
+    background: url(../images/background.jpg);
+    background-size: cover;
 }
 
 .body-content 
@@ -58,7 +59,8 @@ body
 
 ///////////// /* AddUser Page*/ //////////////
 
-#userGrid {
+#userGrid 
+{
     display: grid;
     width: 100%;
     opacity: .93;
@@ -71,13 +73,15 @@ body
         "ftr ftr ftr ftr ftr ftr";
 }
 
-#newUser {
+#newUser 
+{
     grid-area: sup;
     margin: auto;
     text-align: center;
 }
 
-#newUserForm {
+#newUserForm 
+{
     grid-area: sup;
     text-align: center;
     padding: 25px;
