@@ -4,5 +4,105 @@
     ViewData["Title"] = "UserControls";
 }
 
-<h1 class="white">User Controls Page</h1>
+<div id="webCam">
+    <img src="http://192.168.0.108:8080/?action=stream">
+</div>
 
+<div id="controls">
+    <div id="carControl">
+        <div class="title"><h3>Car Controls</h3></div>
+        <div class="controlLeft">
+            <form method="post" asp-page-handler="Control">
+                <input id="leftBtn" class="controlBtn" type="submit" name="cmd" value="Left" />
+            </form>
+        </div>
+        <div class="controlCenter">
+            <form method="post" asp-page-handler="Control">
+                <input id="forwardBtn" class="controlBtn forwardBtn" type="submit" name="cmd" value="Forward" />
+                <input id="homeBtn" class="controlBtn" type="submit" name="cmd" value="Home" />
+                <input id="backwardBtn" class="controlBtn" type="submit" name="cmd" value="Backward" />
+            </form>
+        </div>
+        <div class="controlRight">
+            <form method="post" asp-page-handler="Control">
+                <input id="rightBtn" class="controlBtn" type="submit" name="cmd" value="Right" />
+            </form>
+        </div>
+        <div class="controlStop">
+            <form method="post" asp-page-handler="Control">
+                <input id="stopBtn" class="connectBtn" type="submit" name="cmd" value="Stop" />
+            </form>
+        </div>
+    </div>
+
+    <div id="camControl">
+        <div class="title"><h3>Cam Controls</h3></div>
+        <div class="controlLeft">
+            <form method="post" asp-page-handler="CamControl">
+                <input id="camLeft" class="controlBtn" type="submit" name="cmd" value="Left" />
+            </form>
+        </div>
+        <div class="controlCenter">
+            <form method="post" asp-page-handler="CamControl">
+                <input id="camUp" class="controlBtn" type="submit" name="cmd" value="Up" />
+                <input id="camHome" class="controlBtn" type="submit" name="cmd" value="Home" />
+                <input id="camDown" class="controlBtn" type="submit" name="cmd" value="Down" />
+            </form>
+        </div>
+        <div class="controlRight">
+            <form method="post" asp-page-handler="CamControl">
+                <input id="camRight" class="controlBtn" type="submit" name="cmd" value="Right" />
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="speedControl">
+    <form method="post" asp-page-handler="SetSpeed">
+        <input type="range" min="10" max="100" name="speed" value="@Model.mySpeed" class="slider" id="mySpeed">
+        <h3 class="white">Speed: <span id="speed"></span></h3>
+    </form>
+</div>
+
+<div id="connect" style="margin: 20px">
+    <form method="post" asp-page-handler="Connect">
+        <input class="controlStop" type="submit" name="Connect" value="Connect" />
+    </form>
+</div>
+
+<div id="diconnect" style="margin: 20px">
+    <form method="post" asp-page-handler="Disconnect">
+        <input class="controlStop" type="submit" name="Disconnect" value="Disconnect" />
+    </form>
+</div>
+
+<div id="auxConnect" style="margin: 20px">
+    <form method="post" asp-page-handler="AuxConnect">
+        <input class="controlStop" type="submit" name="Disconnect" value="AuxConnect" />
+    </form>
+</div>
+
+<div id="auxDisconnect" style="margin: 20px">
+    <form method="post" asp-page-handler="AuxDisconnect">
+        <input class="controlStop" type="submit" name="Disconnect" value="AuxDisconnect" />
+    </form>
+</div>
+
+<div id="lightOn" style="margin: 20px">
+    <form method="post" asp-page-handler="LightOn">
+        <input class="controlStop" type="submit" name="Disconnect" value="LightOn" />
+    </form>
+</div>
+
+<div id="lightOff" style="margin: 20px">
+    <form method="post" asp-page-handler="LightOff">
+        <input class="controlStop" type="submit" name="Disconnect" value="LightOff" />
+    </form>
+</div>
+
+<div id="speak" style="margin: 20px">
+    <form method="post" asp-page-handler="Speak">
+        <input type="text" name="text" value="text" />
+        <input type="submit" value="Speak" />
+    </form>
+</div>

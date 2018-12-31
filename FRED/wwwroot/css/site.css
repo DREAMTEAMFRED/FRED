@@ -105,8 +105,104 @@ body
             margin-bottom: 0;
         }
 
+///////////// /* UserControls Page*/ //////////////
+
+#webCam {
+    width: 100%;
+    text-align: center;
+}
+
+#controls {
+    width: 100%;
+}
+
+#carControl {
+    width: 300px;
+    text-align: center;
+    margin: 20px 20px 20px 250px;
+    float: left;
+}
+
+#camControl {
+    width: 300px;
+    text-align: center;
+    margin: 20px;
+    float: left;
+}
+
+.title {
+    width: 100%;
+}
+
+.controlBtn {
+    margin: 10px;
+}
+
+.controlLeft {
+    width: 100px;
+    height: 100px;
+    line-height: 100px;
+    white-space: nowrap;
+    float: left;
+}
+
+.controlCenter {
+    width: 100px;
+    float: left;
+}
+
+.controlRight {
+    width: 100px;
+    height: 100px;
+    line-height: 100px;
+    white-space: nowrap;
+    float: left;
+}
+
+.controlStop {
+    width: 100%;
+    clear: both;
+}
 
 
+
+
+
+#speedControl {
+    width: 200px;
+    margin: 20px;
+    float: left;
+}
+
+.slider {
+    -webkit-appearance: none;
+    width: 200px;
+    height: 25px;
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+
+    .slider:hover {
+        opacity: 1;
+    }
+
+    .slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 25px;
+        height: 25px;
+        background: #4CAF50;
+        cursor: pointer;
+    }
+
+    .slider:-moz-range-thumb {
+        width: 25px;
+        height: 25px;
+        background: #4CAF50;
+        cursor: pointer;
+    }
 
 
 
