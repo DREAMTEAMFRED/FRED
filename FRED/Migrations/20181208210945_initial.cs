@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace FRED.Migrations
 {
-    public partial class Initial : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -15,7 +15,7 @@ namespace FRED.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Username = table.Column<string>(maxLength: 50, nullable: false),
                     Password = table.Column<string>(maxLength: 248, nullable: false),
-                    Status = table.Column<string>(maxLength: 1, nullable: false, defaultValue: "A")
+                    Status = table.Column<string>(maxLength: 1, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -28,8 +28,8 @@ namespace FRED.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    LoginCount = table.Column<int>(nullable: false, defaultValue: 0),
-                    LastLogin = table.Column<string>(nullable: false, defaultValueSql: "GETDATE()"),
+                    LoginCount = table.Column<int>(nullable: false),
+                    LastLogin = table.Column<string>(nullable: false),
                     UserID = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -40,7 +40,7 @@ namespace FRED.Migrations
                         column: x => x.UserID,
                         principalTable: "User",
                         principalColumn: "UserId",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(

@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FRED.Migrations
 {
     [DbContext(typeof(FredContext))]
-    [Migration("20181206152923_Initial")]
-    partial class Initial
+    [Migration("20181208210945_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

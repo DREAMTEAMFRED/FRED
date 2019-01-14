@@ -28,7 +28,7 @@ namespace FRED.Pages
         {
             Program.Controller.UserID = 0;
             Program.Controller.IsVerified = false;
-            
+
             Response.Redirect("./Index");
         }
 

@@ -15,9 +15,9 @@ namespace FRED.Models
 
         // creates singular table names
         protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {            
+        {
             modelBuilder.Entity<User>().ToTable("User");
-            modelBuilder.Entity<Log>().ToTable("Log");          
+            modelBuilder.Entity<Log>().ToTable("Log");
         }
     }
 }

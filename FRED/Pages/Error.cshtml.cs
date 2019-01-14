@@ -7,12 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FRED.Pages
-{   
+{
     public class ErrorModel : PageModel
-    {    
+    {
         public void OnGet()
         {
-            
+
         }
 
         public void OnPostLogin(string username, string password)
