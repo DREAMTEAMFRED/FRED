@@ -8,6 +8,7 @@ namespace FRED.Utility
     public class Temp
     {
         public int mySpeed = 50;
+        public string serverIP = "empty";
 
         public void SetSpeed(int speed)
         {
@@ -17,6 +18,16 @@ namespace FRED.Utility
         public int GetSpeed()
         {
             return mySpeed;
+        }
+
+        public void SetIP(string ip)
+        {
+            serverIP = ip;
+        }
+
+        public string GetIP()
+        {
+            return serverIP;
         }
     }
 }

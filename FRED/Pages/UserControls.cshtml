@@ -4,10 +4,11 @@
     ViewData["Title"] = "UserControls";
 }
 
-<div id="webCam">
-    <img src="http://192.168.0.108:8080/?action=stream">
-</div>
-
+@{
+    <div id="webCam">              
+        <img src="http://@Model.serverIP:8080/?action=stream">
+    </div>
+}
 <div id="controls">
     <div id="carControl">
         <div class="title"><h3>Car Controls</h3></div>
@@ -66,6 +67,7 @@
 
 <div id="connect" style="margin: 20px">
     <form method="post" asp-page-handler="Connect">
+        <input type="text" name="ipAddress" value="ip address" />
         <input class="controlStop" type="submit" name="Connect" value="Connect" />
     </form>
 </div>
@@ -78,6 +80,7 @@
 
 <div id="auxConnect" style="margin: 20px">
     <form method="post" asp-page-handler="AuxConnect">
+        <input type="text" name="ipAddress" value="ip address" />
         <input class="controlStop" type="submit" name="Disconnect" value="AuxConnect" />
     </form>
 </div>
@@ -104,5 +107,11 @@
     <form method="post" asp-page-handler="Speak">
         <input type="text" name="text" value="text" />
         <input type="submit" value="Speak" />
+    </form>
+</div>
+
+<div id="fredSees" style="margin: 20px">
+    <form method="post" asp-page-handler="FredSees">
+        <input class="controlStop" type="submit" name="Disconnect" value="Fred Sees" />
     </form>
 </div>

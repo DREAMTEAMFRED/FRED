@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -14,14 +15,15 @@ namespace FRED.Pages
         private static TcpClient coreClient = null;
         private static NetworkStream stream = null;
         private static NetworkStream auxStream = null;
+        public string serverIP = Program.Temp.GetIP();
 
         public int mySpeed = Program.Temp.GetSpeed();
 
         public void OnGet()
         {
-
+            
         }
-
+        
         public void OnPostLogout()
         {
             Program.Controller.UserID = 0;
@@ -30,9 +32,10 @@ namespace FRED.Pages
             Response.Redirect("./Index");
         }
 
-        public void OnPostConnect(string cmd)
+        public void OnPostConnect(string ipAddress)
         {
-            string server = "192.168.0.108";
+            Program.Temp.SetIP(ipAddress);
+            string server = ipAddress;
             int port = 21567;
             Byte[] speed = System.Text.Encoding.ASCII.GetBytes("speed50");
 
@@ -65,9 +68,10 @@ namespace FRED.Pages
                 client.Close();
         }
 
-        public void OnPostAuxConnect()
+        public void OnPostAuxConnect(string ipAddress)
         {
-            string server = "192.168.0.108";
+            Program.Temp.SetIP(ipAddress);
+            string server = ipAddress;
             int port = 13000;
 
             try
@@ -84,6 +88,7 @@ namespace FRED.Pages
             {
                 Console.WriteLine("SocketException: {0}", e);
             }
+            Response.Redirect("./UserControls");
         }
 
         public void OnPostAuxDisconnect()
@@ -214,6 +219,13 @@ namespace FRED.Pages
         public void OnPostSpeak(string text)
         {
             Byte[] speak = System.Text.Encoding.ASCII.GetBytes("TTS-" + text);
+            auxStream.Write(speak);
+        }
+
+        public async void OnPostFredSees()
+        {
+            await Program.FredVision.GetDescription();
+            Byte[] speak = System.Text.Encoding.ASCII.GetBytes("TTS-I see" + Program.FredVision.FredSees());
             auxStream.Write(speak);
         }
     }

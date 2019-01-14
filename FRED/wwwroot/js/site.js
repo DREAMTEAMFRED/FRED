@@ -1,4 +1,4 @@
-﻿
+﻿/*
 let keys = {
     37: 'left',
     39: 'right',
@@ -130,7 +130,7 @@ document.body.onkeyup = function (e) {
         }
     }
 };
-
+*/
 
 let slider = document.getElementById("mySpeed");
 let output = document.getElementById("speed");

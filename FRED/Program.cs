@@ -18,6 +18,7 @@ namespace FRED
         public static Controller Controller = new Controller();
         public static Password Password = new Password();
         public static Temp Temp = new Temp();
+        public static FredVision FredVision = new FredVision();
 
         public static void Main(string[] args)
         {
