@@ -224,9 +224,49 @@ namespace FRED.Pages
 
         public async void OnPostFredSees()
         {
-            await Program.FredVision.GetDescription();
+            await Program.FredVision.GetVision("describe");
             Byte[] speak = System.Text.Encoding.ASCII.GetBytes("TTS-I see" + Program.FredVision.FredSees());
             auxStream.Write(speak);
         }
+
+        public async void OnPostFredReads()
+        {
+            await Program.FredVision.GetVision("read");
+            Byte[] speak = System.Text.Encoding.ASCII.GetBytes("TTS-" + Program.FredVision.FredReads());
+            auxStream.Write(speak);
+        }
+
+        public async void OnPostDetectFace()
+        {
+            await Program.FredVision.GetVision("detect");
+            await Program.FredVision.DetectFace();
+            string name = Program.FredVision.GetName();
+            Byte[] speak = null;
+
+            switch (name)
+            {
+                case "no face":
+                    {
+                        speak = System.Text.Encoding.ASCII.GetBytes("TTS-I dont see any faces to detect");
+                        break;
+                    }
+                case "dont recgonize":
+                    {
+                        speak = System.Text.Encoding.ASCII.GetBytes("TTS-I dont recgonize any faces?");
+                        break;
+                    }
+                default:
+                    {
+                        string[] greeting = { "How are you today?", "whats up?", "What, you never heard a toy car talk before?" };
+                        Random randNum = new Random();
+                        randNum.Next(3);
+                        speak = System.Text.Encoding.ASCII.GetBytes("TTS-Hello " + name + ". How are you today?");
+                        break;
+                    }
+            }
+            
+            auxStream.Write(speak);
+        }
+
     }
 }
