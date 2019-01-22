@@ -176,7 +176,7 @@ namespace FRED.Utility
                 
 
                 byte[] byteData = Encoding.UTF8.GetBytes("{\"PersonGroupId\": \"1111\", \"faceIds\": [" +
-                                                        faceIDs[0] + "]," +
+                                                        faceID + "]," +
                                                         "\"maxNumOfCandidatesReturned\": 1," +
                                                         "\"confidenceThreshold\": 0.5}");
 

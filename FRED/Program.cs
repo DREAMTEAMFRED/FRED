@@ -19,7 +19,7 @@ namespace FRED
         public static Password Password = new Password();
         public static Temp Temp = new Temp();
         public static FredVision FredVision = new FredVision();
-        public static TestResponse TestResponse = new TestResponse();
+        
 
         public static void Main(string[] args)
         {
