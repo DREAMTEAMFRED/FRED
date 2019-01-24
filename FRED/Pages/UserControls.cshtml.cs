@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FRED.Pages
@@ -19,9 +17,10 @@ namespace FRED.Pages
 
         public int mySpeed = Program.Temp.GetSpeed();
 
-        public void OnGet()
+        public async Task OnGetAsync()
         {
-            
+            string test = "test";
+            await Program.FredVision.GetFacesList();
         }
         
         public void OnPostLogout()
@@ -240,10 +239,10 @@ namespace FRED.Pages
         {
             await Program.FredVision.GetVision("detect");
             await Program.FredVision.DetectFace();
-            string name = Program.FredVision.GetName();
+            List<string> names = Program.FredVision.GetNames();
             Byte[] speak = null;
 
-            switch (name)
+            switch (names[0])
             {
                 case "no face":
                     {
@@ -260,7 +259,7 @@ namespace FRED.Pages
                         string[] greeting = { "How are you today?", "whats up?", "What, you never heard a toy car talk before?" };
                         Random randNum = new Random();
                         randNum.Next(3);
-                        speak = System.Text.Encoding.ASCII.GetBytes("TTS-Hello " + name + ". How are you today?");
+                        speak = System.Text.Encoding.ASCII.GetBytes("TTS-Hello " + names[0] + ". How are you today?");
                         break;
                     }
             }
@@ -268,5 +267,22 @@ namespace FRED.Pages
             auxStream.Write(speak);
         }
 
+        public async void OnPostCreatePerson(string name, string desc)
+        {
+            await Program.FredVision.CreatePerson(name, desc);
+
+            //Response.Redirect("./UserControls");
+        }
+
+        public async void OnPostDeletePerson(string personID)
+        {
+            await Program.FredVision.DeletePerson(personID);
+        }
+
+        public void OnPostAddPerson()
+        {
+            
+                 //addPerson = true;
+        }
     }
 }

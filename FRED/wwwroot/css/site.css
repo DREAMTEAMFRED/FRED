@@ -168,10 +168,6 @@ body
     clear: both;
 }
 
-
-
-
-
 #speedControl {
     width: 200px;
     margin: 20px;
@@ -208,10 +204,137 @@ body
         cursor: pointer;
     }
 
+#addFacePanel {
+    position: fixed;
+    z-index: 13;
+    width: 840px;
+    max-height: 800px;    
+    margin-left: calc(50% - 420px);
+    
+    padding: 10px 10px 10px 20px;
+    background: rgba(0, 0, 0, .8);
+    border: 1px solid #000;    
+    border-radius: 12px;    
+    box-shadow: 0 4px 11px #999;
+    top: -800px;
+    
+    color: #fff;
+}
+    #facePanelTop {
+        width: 100%;
+        min-height: 400px;        
+    }
+        #faceTable {
+            margin: 15px;
+            border-collapse: collapse;
+            width: 100%;
+        }
+        #faceTable th {
+            padding-top: 15px;
+            padding-bottom: 15px;
+            text-align: left;    
+            text-decoration: underline;
+            color: white;
+        }
+        #faceTable tr {
+            padding-bottom: 10px;
+        }
+    #facePanelBottom {
+        width: 100%;
+        
+    }
+        #facePanelBottomLeft {
+            width: 85%;
+            float: left;
+        }
+        #facePanelBottomRight {
+            width: 15%;
+            float: left;
+        }
+        #closeWindow {
+            text-align: right;
+        }
+        #addFacePanel i{
+            font-size: 2.5em;
+            margin: 20px;
+            color: #ddd;
+        }
+        #addFacePanel i:hover {
+            color: #bb8;
+        }
+
+#addPersonPanel {
+    position: fixed;
+    z-index: 14;
+    width: 840px;
+    height: 400px;
+    
+    margin-left: calc(50% - 420px);
+    padding: 10px 10px 10px 20px;
+    background: rgba(0, 0, 0, .8);
+    border: 1px solid #000;
+    border-radius: 12px;
+    box-shadow: 0 4px 11px #999;
+    top: -500px;
+    color: #fff;
+}
+    #addPersonPanelTop {
+        width: 100%;
+        height: 300px;
+        text-align: center;
+    }
+    #addPersonTable {
+            margin-left: 150px;
+            border-collapse: collapse;
+            width: calc(100% - 400px);
+            font-size: 1.3em;
+        }
+        #addPersonTable td {
+            padding: 10px;
+        }
+        #addPersonPanelTop h1 {
+            padding-bottom: 50px;
+            text-align: center;
+            text-decoration: underline;
+        }
+        #addPersonPanelTop input {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1em;
+            color: #000;
+        }
+        #addPersonBtn
+            {
+                border-radius: 4px;
+                border: 1px solid #444;
+                font-weight: 700;
+                font-size: 1em;
+                color: #ddd;
+                background: #4CAF50;
+                width: 100px;
+            }
+                #addPersonBtn:hover 
+                {
+                    background: #ADD3F5;
+                    color: #444;
+                }
+    #addPersonPanelBottom {
+        width: 100%;
+        height: 100px;
+    }
+        #addPersonPanelBottom i{
+            font-size: 2.5em;
+            margin: 20px;
+            padding-bottom: 10px;
+            color: #ddd;
+        }
+        #addPersonPanel i:hover {
+            color: #bb8;
+        }
 
 
-.white
-{
+
+.white {
     color: #fff;
 }
 

@@ -1,4 +1,42 @@
-﻿/*
+﻿
+
+let faceIsOpen = false;
+
+function ToggleFacePanel() {
+    if (!faceIsOpen) { // open panel        
+        $('#addFacePanel').animate({
+            top: 150
+        }, 220, 'swing');
+        faceIsOpen = true;
+    }
+    else { // close panel        
+        $('#addFacePanel').animate({
+            top: -800
+        }, 220, 'swing');
+        faceIsOpen = false;
+    }
+} // TogglePanel()
+
+let addPersonIsOpen = false;
+
+function ToggleAddPersonPanel() {
+    if (!addPersonIsOpen) { // open panel        
+        $('#addPersonPanel').animate({
+            top: 150
+        }, 220, 'swing');
+        addPersonIsOpen = true;
+    }
+    else { // close panel        
+        $('#addPersonPanel').animate({
+            top: -800
+        }, 220, 'swing');
+        addPersonIsOpen = false;
+    }
+} // TogglePanel()
+
+
+
+/*
 let keys = {
     37: 'left',
     39: 'right',

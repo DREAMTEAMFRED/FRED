@@ -4,6 +4,68 @@
     ViewData["Title"] = "UserControls";
 }
 
+<div id="addFacePanel">
+    <div id="facePanelTop">
+        <table id="faceTable">
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Stored Faces</th>
+                <th>Add Face</th>
+                <th>Remove Person</th>
+            </tr>
+            @for (int i = 0; i < Program.Temp.GetListNames().Count; i++)
+            {
+                <tr>
+                    <td>@Program.Temp.GetListNames()[i]</td>
+                    <td>@Program.Temp.GetListDesc()[i]</td>
+                    <td>@Program.Temp.GetListFaceCounts()[i]</td>
+                    <td><a href="#">Add Face</a></td>
+                    <td>
+                        <form method="post" asp-page-handler="DeletePerson">
+                            <input type="hidden" name="personID" value="@Program.Temp.GetListPersonIDs()[i]" />
+                            <input type="submit" value="delete" />
+                        </form>                            
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+    <div id="facePanelBottom">
+        <div id="facePanelBottomLeft">            
+            <i class="fas fa-user-plus" onclick="ToggleFacePanel(); ToggleAddPersonPanel();"></i>                           
+        </div>
+        <div id="facePanelBottomRight">            
+            <i id="closeWindow" onclick="ToggleFacePanel()" class="far fa-times-circle"></i>            
+        </div>
+    </div>
+</div>
+
+<div id="addPersonPanel">
+    <div id="addPersonPanelTop">
+        <h2>Add Person to database</h2>
+        <form method="post" asp-page-handler="CreatePerson">
+            <table id="addPersonTable">
+                <tr>
+                    <td>Name:</td>
+                    <td><input type="text" name="name" value="name" /></td>
+                </tr>
+                <tr>
+                    <td>Description:</td>
+                    <td><input type="text" name="desc" value="description" /></td>
+                </tr>
+            </table>                        
+            <br />
+            <input id="addPersonBtn" type="submit" name="Login" value="Add Person" />            
+        </form>
+    </div>
+    <div id="addPersonPanelBottom">
+        <i class="fas fa-arrow-left" onclick="ToggleFacePanel(); ToggleAddPersonPanel();">&nbsp;Back</i>
+    </div>
+</div>
+
+
+
 @{
     <div id="webCam">              
         <img src="http://@Model.serverIP:8080/?action=stream">
@@ -127,3 +189,8 @@
         <input class="controlStop" type="submit" value="Detect Face" />
     </form>
 </div>
+
+<div id="faceList" style="margin: 20px">         
+    <input class="controlStop" onclick="ToggleFacePanel()" type="submit" value="Get Face list" />            
+</div>
+

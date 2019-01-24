@@ -7,8 +7,8 @@ namespace FRED.Utility
 {
     public class Temp
     {
-        public int mySpeed = 50;
-        public string serverIP = "empty";
+        private int mySpeed = 50;
+        private string serverIP = "empty";
 
         public void SetSpeed(int speed)
         {
@@ -29,5 +29,22 @@ namespace FRED.Utility
         {
             return serverIP;
         }
+
+        private List<string> nams = new List<string>();
+        private List<string> descriptions = new List<string>();
+        private List<int> faceCounts = new List<int>();
+        private List<string> personIDs = new List<string>();
+
+        public void SetListNames(List<string> names) { nams = names; }
+        public List<string> GetListNames() { return nams; }
+
+        public void SetListDesc(List<string> desc) { descriptions = desc; }
+        public List<string> GetListDesc() { return descriptions; }
+
+        public void SetListFaceCounts(List<int> count) { faceCounts = count; }
+        public List<int> GetListFaceCounts() { return faceCounts; }
+
+        public void SetListPersonIDs(List<string> IDs) { personIDs = IDs; }
+        public List<string> GetListPersonIDs() { return personIDs; }
     }
 }

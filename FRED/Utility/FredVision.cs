@@ -13,22 +13,29 @@ using System.Text;
 namespace FRED.Utility
 {
     public class FredVision
-    {        
+    {
+        private HttpClient client = new HttpClient();
         private string data = null;        
-        JsonNinja jNinja;
+        private JsonNinja jNinja;
 
         private void SetData(string data) { this.data = data; }
         public string GetData() { return data; }
+
         // GetPerson()
+        private List<string> faces = new List<string>();
+        private List<string> names = new List<string>();
+        public List<string> GetNames() { return names; }
+
         private string name;
         private void SetName(string name) { this.name = name; }
         public string GetName() { return name; }
 
         public async Task GetVision(string type)
         {
+            client.DefaultRequestHeaders.Accept.Clear();
             string serverIP = Program.Temp.GetIP();            
             var uri = "";
-            var client = new HttpClient();
+            
             var queryString = HttpUtility.ParseQueryString(string.Empty);
             
             // Request headers and parameters
@@ -91,7 +98,7 @@ namespace FRED.Utility
             {
                 // do nothing yet
             }
-            client.DefaultRequestHeaders.Accept.Clear();
+            
         }
 
         public string FredSees()
@@ -139,6 +146,7 @@ namespace FRED.Utility
         public async Task DetectFace()
         {
             List<string> faceIDs = new List<string>();
+            
             JsonArray jsonArray = (JsonArray)JsonValue.Parse(data);
             foreach (JsonObject obj in jsonArray)
             {
@@ -146,11 +154,9 @@ namespace FRED.Utility
                 obj.TryGetValue("faceId", out id);
                 faceIDs.Add(id.ToString());
             }
-
-            var client = new HttpClient();
+            
             var queryString = HttpUtility.ParseQueryString(string.Empty);
 
-            // Request headers
             client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "e97b9e9e76314914b139b73a8a2148cb");
 
             var uri = "https://eastus.api.cognitive.microsoft.com/face/v1.0/identify?" + queryString;
@@ -172,9 +178,7 @@ namespace FRED.Utility
                 {
                     faceID = faceIDs[0];
                 }
-
-                
-
+                               
                 byte[] byteData = Encoding.UTF8.GetBytes("{\"PersonGroupId\": \"1111\", \"faceIds\": [" +
                                                         faceID + "]," +
                                                         "\"maxNumOfCandidatesReturned\": 1," +
@@ -194,16 +198,25 @@ namespace FRED.Utility
                 {
                     // do nothing yet
                 }
-                
+                                
                 jNinja = new JsonNinja(data);
                 List<string> filterCollections = jNinja.GetInfoList("\"candidates\"");
-                jNinja = new JsonNinja(filterCollections[0]);
-                string personID = jNinja.GetInfo("\"personId\"");
-                await GetPerson(personID);
+                for (int i = 0; i < filterCollections.Count; i++)
+                {
+                    jNinja = new JsonNinja(filterCollections[i]);
+                    faces.Add(jNinja.GetInfo("\"personId\""));
+                }
+                
+                foreach (string face in faces)
+                {
+                    await GetPerson(face);
+                }
+                                
             }
             else
             {
-                SetName("no face");
+                faces.Add("no face");
+                //SetName("no face");
             }
 
             client.DefaultRequestHeaders.Accept.Clear();
@@ -212,11 +225,9 @@ namespace FRED.Utility
 
         public async Task GetPerson(string personID)
         {
-            string personsName;
-            var client = new HttpClient();
+            string personsName;            
             var queryString = HttpUtility.ParseQueryString(string.Empty);
-
-            // Request headers
+            
             client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "e97b9e9e76314914b139b73a8a2148cb");
 
             if (personID != "")
@@ -242,13 +253,106 @@ namespace FRED.Utility
                 jsonDoc.TryGetValue("name", out name);
                 personsName = name.ToString();
                 personsName = personsName.Substring(1, personsName.Length - 2);
-                SetName(personsName);
+                names.Add(personsName);
+                //SetName(personsName);
             }
             else
             {
+                //faces.Add("dont recgonize");
                 SetName("dont recgonize");
             }
             client.DefaultRequestHeaders.Accept.Clear();
+        }// GetPerson()
+
+        public async Task GetFacesList()
+        {            
+            var queryString = HttpUtility.ParseQueryString(string.Empty);
+            
+            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "e97b9e9e76314914b139b73a8a2148cb");
+            
+            var uri = "https://eastus.api.cognitive.microsoft.com/face/v1.0/persongroups/1111/persons?" + queryString;
+
+            var response = await client.GetAsync(uri);
+            if (response.IsSuccessStatusCode)
+            {
+                data = await response.Content.ReadAsStringAsync();
+            }
+            else
+            {
+                // do nothing yet
+            }
+
+            List<string> nams = new List<string>();
+            List<string> descriptions = new List<string>();
+            List<int> faceCounts = new List<int>();
+            List<string> personIDs = new List<string>();
+
+            JsonArray jsonArray = (JsonArray)JsonValue.Parse(data);
+            foreach (JsonObject obj in jsonArray)
+            {
+                JsonValue nam;
+                JsonValue desc;
+                JsonValue ids;
+                JsonValue personID;
+                obj.TryGetValue("name", out nam);
+                obj.TryGetValue("userData", out desc);
+                obj.TryGetValue("personId", out personID);
+                nams.Add(nam.ToString());
+                descriptions.Add(desc.ToString());
+                personIDs.Add(personID.ToString());
+
+                obj.TryGetValue("persistedFaceIds", out ids);
+                JsonArray face = (JsonArray)ids;
+                int count = 0;
+                foreach (string id in face)
+                {
+                    count++;
+                }
+                faceCounts.Add(count);
+
+            }
+
+            Program.Temp.SetListNames(nams);
+            Program.Temp.SetListDesc(descriptions);
+            Program.Temp.SetListFaceCounts(faceCounts);
+            Program.Temp.SetListPersonIDs(personIDs);
+
+            client.DefaultRequestHeaders.Accept.Clear();
+        }
+
+        public async Task CreatePerson(string name, string desc)
+        {            
+            var queryString = HttpUtility.ParseQueryString(string.Empty);
+            
+            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "e97b9e9e76314914b139b73a8a2148cb");
+
+            var uri = "https://eastus.api.cognitive.microsoft.com/face/v1.0/persongroups/1111/persons?" + queryString;
+
+            HttpResponseMessage response;
+
+            // Request body
+            byte[] byteData = Encoding.UTF8.GetBytes("{\"name\": \"" + name + "\"," +
+                                                "\"userData\": \"" + desc + "\"}");
+
+            using (var content = new ByteArrayContent(byteData))
+            {
+                content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                response = await client.PostAsync(uri, content);
+            }
+
+            //await GetFacesList();
+        }
+
+        public async Task DeletePerson(string personID)
+        {
+            personID = personID.Substring(1, personID.Length - 2);            
+            var queryString = HttpUtility.ParseQueryString(string.Empty);          
+            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "e97b9e9e76314914b139b73a8a2148cb");
+
+            var uri = "https://eastus.api.cognitive.microsoft.com/face/v1.0/persongroups/1111/persons/"
+                + personID + "?" + queryString;
+
+            var response = await client.DeleteAsync(uri);
         }
     }
 }
