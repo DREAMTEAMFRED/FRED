@@ -35,6 +35,55 @@ function ToggleAddPersonPanel() {
 } // TogglePanel()
 
 
+function SubmitForm() {
+    $('#addFaceFormSubmit').submit();
+    ToggleTakePicPanel();
+}
+
+function CloseWindow() {
+    $('#closeWindow').submit();
+}
+
+
+// refresh page and and run method
+window.onload = function () {
+    var reloading = sessionStorage.getItem("reloading");
+    if (reloading) {
+        sessionStorage.removeItem("reloading");
+        ToggleFacePanel();
+    }
+}
+
+function Refresh() {
+    sessionStorage.setItem("reloading", "true");
+    document.location.reload();
+}
+
+/*
+$(function () {
+    $('#addFaceBtn').click(function (e) {
+        e.preventDefault();
+        $('#confirmDialog').dialog("open");
+    });
+
+    $("#confirmDialog").dialog({
+        autoOpen: false,
+        modal: true,
+        resizable: false,
+        buttons: {
+            "Ok": function () {
+                $("#addFaceForm").submit();
+            },
+            "Cancel": function () {
+                $(this).dialog("close");
+            }
+        },
+    });
+});
+*/
+
+
+
 
 /*
 let keys = {

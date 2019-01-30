@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FRED.Pages
@@ -15,12 +17,14 @@ namespace FRED.Pages
         private static NetworkStream auxStream = null;
         public string serverIP = Program.Temp.GetIP();
 
+        //public string personID = Program.Temp.GetPersonID();
+        public string display = "none";
         public int mySpeed = Program.Temp.GetSpeed();
 
         public async Task OnGetAsync()
-        {
-            string test = "test";
+        {            
             await Program.FredVision.GetFacesList();
+            
         }
         
         public void OnPostLogout()
@@ -223,66 +227,100 @@ namespace FRED.Pages
 
         public async void OnPostFredSees()
         {
-            await Program.FredVision.GetVision("describe");
+            await Program.FredVision.GetVision("describe", null);
             Byte[] speak = System.Text.Encoding.ASCII.GetBytes("TTS-I see" + Program.FredVision.FredSees());
             auxStream.Write(speak);
         }
 
         public async void OnPostFredReads()
         {
-            await Program.FredVision.GetVision("read");
+            await Program.FredVision.GetVision("read", null);
             Byte[] speak = System.Text.Encoding.ASCII.GetBytes("TTS-" + Program.FredVision.FredReads());
             auxStream.Write(speak);
         }
 
         public async void OnPostDetectFace()
         {
-            await Program.FredVision.GetVision("detect");
+            await Program.FredVision.GetVision("detect", null);
             await Program.FredVision.DetectFace();
             List<string> names = Program.FredVision.GetNames();
             Byte[] speak = null;
 
-            switch (names[0])
+            if (names.Count > 1)
             {
-                case "no face":
-                    {
-                        speak = System.Text.Encoding.ASCII.GetBytes("TTS-I dont see any faces to detect");
-                        break;
-                    }
-                case "dont recgonize":
-                    {
-                        speak = System.Text.Encoding.ASCII.GetBytes("TTS-I dont recgonize any faces?");
-                        break;
-                    }
-                default:
-                    {
-                        string[] greeting = { "How are you today?", "whats up?", "What, you never heard a toy car talk before?" };
-                        Random randNum = new Random();
-                        randNum.Next(3);
-                        speak = System.Text.Encoding.ASCII.GetBytes("TTS-Hello " + names[0] + ". How are you today?");
-                        break;
-                    }
+                string sayNames = "";
+                foreach (string name in names)
+                {
+                    sayNames += name + " and ";
+                }
+                sayNames = sayNames.Substring(0, sayNames.Length - 5);
+                speak = System.Text.Encoding.ASCII.GetBytes("TTS-Hello, " + sayNames + ". How are you today?");
+                
             }
-            
-            auxStream.Write(speak);
-        }
+            else
+            {
+                switch (names[0])
+                {
+                    case "no face":
+                        {
+                            speak = System.Text.Encoding.ASCII.GetBytes("TTS-I dont see any faces to detect");                            
+                            break;
+                        }
+                    case "dont recgonize":
+                        {
+                            speak = System.Text.Encoding.ASCII.GetBytes("TTS-I dont recgonize any faces?");                            
+                            break;
+                        }
+                    default:
+                        {
+                            string[] greeting = { "How are you today?", "whats up?", "What, you never heard a toy car talk before?" };
+                            Random randNum = new Random();
+                            randNum.Next(3);
+                            speak = System.Text.Encoding.ASCII.GetBytes("TTS-Hello, " + names[0] + ". How are you today?");                            
+                            break;
+                        }
+                }
+            }
 
+            Program.FredVision.ClearNames();
+            names.Clear();
+            auxStream.Write(speak);            
+        }
+        
         public async void OnPostCreatePerson(string name, string desc)
         {
-            await Program.FredVision.CreatePerson(name, desc);
-
-            //Response.Redirect("./UserControls");
+            await Program.FredVision.CreatePerson(name, desc);            
+            await OnGetAsync();
+            Response.Redirect("./UserControls");
         }
-
+        
         public async void OnPostDeletePerson(string personID)
+        {            
+            await Program.FredVision.DeletePerson(personID);            
+            await OnGetAsync();            
+            Response.Redirect("./UserControls");
+        }
+                
+        public void OnPostAddFace(string person)
         {
-            await Program.FredVision.DeletePerson(personID);
+            Program.Temp.SetPersonID(person);
+            display = "normal";
+        }
+        
+        public async void OnPostTakePic()
+        {
+            await Program.FredVision.GetVision("addFace", Program.Temp.GetPersonID());
+            await Program.FredVision.TrainFace();
+            await OnGetAsync();
+            //Thread.Sleep(1000);
+            Response.Redirect("./UserControls");
         }
 
-        public void OnPostAddPerson()
+        public void CloseWindow()
         {
-            
-                 //addPerson = true;
+            display = "none";
         }
+
+        
     }
 }

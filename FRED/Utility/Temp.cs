@@ -8,7 +8,29 @@ namespace FRED.Utility
     public class Temp
     {
         private int mySpeed = 50;
-        private string serverIP = "empty";
+        private string serverIP = "";
+        private string personID = "";
+        private string trainingStatus = "";
+
+        public void SetTrainingStatus(string status)
+        {
+            this.trainingStatus = status;
+        }
+
+        public string GetTrainingStatus()
+        {
+            return trainingStatus;
+        }
+
+        public void SetPersonID(string personID)
+        {
+            this.personID = personID;
+        }
+
+        public string GetPersonID()
+        {
+            return personID;
+        }
 
         public void SetSpeed(int speed)
         {

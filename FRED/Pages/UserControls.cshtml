@@ -6,26 +6,35 @@
 
 <div id="addFacePanel">
     <div id="facePanelTop">
+        <div id="closeTop"><i onclick="ToggleFacePanel()" class="far fa-times-circle closeWindow"></i></div>        
         <table id="faceTable">
+            
             <tr>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Stored Faces</th>
-                <th>Add Face</th>
-                <th>Remove Person</th>
+                <th><h4>Name</h4></th>
+                <th><h4>Description</h4></th>
+                <th><h4>Stored Faces</h4></th>
+                <th></th>
+                <th></th>
             </tr>
             @for (int i = 0; i < Program.Temp.GetListNames().Count; i++)
             {
+
                 <tr>
                     <td>@Program.Temp.GetListNames()[i]</td>
                     <td>@Program.Temp.GetListDesc()[i]</td>
-                    <td>@Program.Temp.GetListFaceCounts()[i]</td>
-                    <td><a href="#">Add Face</a></td>
+                    <td class="centered-cell">@Program.Temp.GetListFaceCounts()[i]</td>
+                    <td>
+                        <form method="post" asp-page-handler="AddFace" id="addFaceFormSubmit">
+                            <input type="hidden" name="person" value="@Program.Temp.GetListPersonIDs()[i]" />
+                            <input id="addFaceBtn" class="addFaceBtn" type="image"
+                                   src="~/images/addFace-btn.png" />
+                        </form>
+                    </td>
                     <td>
                         <form method="post" asp-page-handler="DeletePerson">
                             <input type="hidden" name="personID" value="@Program.Temp.GetListPersonIDs()[i]" />
-                            <input type="submit" value="delete" />
-                        </form>                            
+                            <input class="removeBtn" type="image" src="~/images/red-delete-rectangle.png" />
+                        </form>
                     </td>
                 </tr>
             }
@@ -35,8 +44,16 @@
         <div id="facePanelBottomLeft">            
             <i class="fas fa-user-plus" onclick="ToggleFacePanel(); ToggleAddPersonPanel();"></i>                           
         </div>
-        <div id="facePanelBottomRight">            
-            <i id="closeWindow" onclick="ToggleFacePanel()" class="far fa-times-circle"></i>            
+        <div id="facePanelBottomMiddle" onch="ToggleFacePanel()">                                          
+            @if (Program.Temp.GetTrainingStatus() != "succeeded")
+            {
+                <span calss="gold" id="trainingStatus">Training Status - @Program.Temp.GetTrainingStatus()</span>
+            }
+        </div>
+        <div id="facePanelBottomRight">
+            <a href="./UserControls">
+                <i onclick="Refresh()" class="fas fa-sync-alt"></i>
+            </a>            
         </div>
     </div>
 </div>
@@ -48,15 +65,15 @@
             <table id="addPersonTable">
                 <tr>
                     <td>Name:</td>
-                    <td><input type="text" name="name" value="name" /></td>
+                    <td><input type="text" name="name"/></td>
                 </tr>
                 <tr>
                     <td>Description:</td>
-                    <td><input type="text" name="desc" value="description" /></td>
+                    <td><input type="text" name="desc"/></td>
                 </tr>
             </table>                        
             <br />
-            <input id="addPersonBtn" type="submit" name="Login" value="Add Person" />            
+            <input id="addPersonBtn" type="submit" onclose="ToggleTakePicPanel()" value="Add Person" />            
         </form>
     </div>
     <div id="addPersonPanelBottom">
@@ -64,7 +81,26 @@
     </div>
 </div>
 
+<div id="confirmDialog" title="Save Face" hidden>
+    <p>Do you want to save changes </p>
+</div>
 
+<div id="takePicPanel" style="display: @Model.display;">
+    <div id="instructions">
+        <p>
+            Look directly into the camera and press <b>Camera Button</b> to take your first pic.
+            Facial Recgonition software works better if you take multiple pictures with
+            your face at different angles. Please submit atleast 3 pictures
+        </p>
+        <form method="post" asp-page-handler="TakePic">
+            <input class="cameraBtn" type="image" src="~/images/camera-btn.png" />
+        </form>
+    </div>
+    <div id="takePicPanelBottom">
+        <i class="far fa-times-circle closeWindow" onclick="CloseWindow()"></i>
+        <form method="post" asp-page-handler="CloseWindow" id="closeWindow"></form>
+    </div>
+</div>
 
 @{
     <div id="webCam">              
