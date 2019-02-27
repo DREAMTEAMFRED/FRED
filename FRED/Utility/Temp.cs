@@ -8,13 +8,79 @@ namespace FRED.Utility
     public class Temp
     {
         private int mySpeed = 50;
-        private string serverIP = "";
+        //private string serverIP = "10.10.10.10";
         private string personID = "";
         private string trainingStatus = "";
+        public string displayControlPanel = "none";
+        public string displayVisionPanel = "none";
+        public string displayFacePanel = "none";
+        public string displayErrorPanel = "none";
+        public string lightStatus = "off";
+        public string error = null;
+
+        public void SetError(string error)
+        {
+            this.error = error;
+        }
+
+        public string GetError()
+        {
+            return error;
+        }
+
+        public void SetLight(string status)
+        {
+            lightStatus = status;
+        }
+
+        public string GetLightStatus()
+        {
+            return lightStatus;
+        }
+
+        public void SetFacePanel(string display)
+        {
+            displayFacePanel = display;
+        }
+
+        public string GetFacePanelStatus()
+        {
+            return displayFacePanel;
+        }
+
+        public void SetControlPanel(string display)
+        {
+            displayControlPanel = display;
+        }
+
+        public string GetContorlPanelStatus()
+        {
+            return displayControlPanel;
+        }
+
+        public void SetVisionPanel(string display)
+        {
+            displayVisionPanel = display;
+        }
+                
+        public string GetVisionPanelStatus()
+        {
+            return displayVisionPanel;
+        }
+
+        public string GetErrorPanelStatus()
+        {
+            return displayErrorPanel;
+        }
+
+        public void SetErrorPanel(string display)
+        {
+            displayErrorPanel = display;
+        }
 
         public void SetTrainingStatus(string status)
         {
-            this.trainingStatus = status;
+            trainingStatus = status;
         }
 
         public string GetTrainingStatus()
@@ -42,6 +108,7 @@ namespace FRED.Utility
             return mySpeed;
         }
 
+        /*
         public void SetIP(string ip)
         {
             serverIP = ip;
@@ -51,6 +118,7 @@ namespace FRED.Utility
         {
             return serverIP;
         }
+        */
 
         private List<string> nams = new List<string>();
         private List<string> descriptions = new List<string>();

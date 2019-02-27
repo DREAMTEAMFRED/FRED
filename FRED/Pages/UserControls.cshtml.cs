@@ -4,29 +4,114 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FRED.Pages
 {
     public class UserControlsModel : PageModel
     {
-        private static TcpClient client = null;
-        private static TcpClient coreClient = null;
-        private static NetworkStream stream = null;
-        private static NetworkStream auxStream = null;
-        public string serverIP = Program.Temp.GetIP();
-
-        //public string personID = Program.Temp.GetPersonID();
+        //private static TcpClient client = null;
+        //private static TcpClient coreClient = null;
+        //private static NetworkStream stream = null;
+        //private static NetworkStream auxStream = null;
+        public string serverIP = Program.Controller.GetIP();
+                
         public string display = "none";
+        public string error = Program.Temp.GetError();
+        public string displayErrorPanel = Program.Temp.GetErrorPanelStatus();
+        public string displayControlPanel = Program.Temp.GetContorlPanelStatus();
+        public string displayVisionPanel = Program.Temp.GetVisionPanelStatus();
+        public string displayFacePanel = Program.Temp.GetFacePanelStatus();
+        public string light = Program.Temp.GetLightStatus();
         public int mySpeed = Program.Temp.GetSpeed();
 
-        public async Task OnGetAsync()
+        public void OnGet()
         {            
-            await Program.FredVision.GetFacesList();
-            
+            /*
+            if (Program.Temp.GetError() != null)
+            {
+                Program.Temp.SetErrorPanel("block");
+                Program.Temp.SetFacePanel("none");
+                Program.Temp.SetVisionPanel("none");
+                Program.Temp.SetControlPanel("none");                
+            }
+            else
+            {
+                //OnPostAuxConnect();
+                //Program.FredVision.GetFacesList().Wait();
+            }
+            */                
         }
-        
+
+        public void OpenErrorPanel()
+        {
+            Program.Temp.SetErrorPanel("block");
+            Program.Temp.SetFacePanel("none");
+            Program.Temp.SetVisionPanel("none");
+            Program.Temp.SetControlPanel("none");
+        }
+
+        public void CloseWindow()
+        {
+            display = "none";
+        }
+
+        public void OnPostOpenAddFacePanel()
+        {
+            Program.FredVision.GetFacesList().Wait();
+
+            if (displayFacePanel == "none")                            
+                Program.Temp.SetFacePanel("block");                           
+            else
+                Program.Temp.SetFacePanel("none");
+
+            Program.Temp.SetControlPanel("none");
+            Program.Temp.SetVisionPanel("none");
+            Response.Redirect("./UserControls");
+        }
+
+        public void OnPostCloseAddFacePanel()
+        {
+            Program.Temp.SetFacePanel("none");
+            Response.Redirect("./UserControls");
+        }
+
+        public void OnPostOpenControlPanel()
+        {
+            if (displayControlPanel == "none")
+                Program.Temp.SetControlPanel("grid");
+            else
+                Program.Temp.SetControlPanel("none");
+
+            Program.Temp.SetFacePanel("none");
+            Program.Temp.SetVisionPanel("none");
+            Response.Redirect("./UserControls");
+        }
+
+        public void OnPostCloseControlPanel()
+        {
+            Program.Temp.SetControlPanel("none");
+            Response.Redirect("./UserControls");
+        }
+
+        public void OnPostOpenVisionPanel()
+        {
+            if (displayVisionPanel == "none")
+                Program.Temp.SetVisionPanel("grid");
+            else
+                Program.Temp.SetVisionPanel("none");
+
+            Program.Temp.SetFacePanel("none");
+            Program.Temp.SetControlPanel("none");
+            Response.Redirect("./UserControls");
+        }
+
+        public void OnPostCloseVisionPanel()
+        {
+            Program.Temp.SetVisionPanel("none");
+            Response.Redirect("./UserControls");
+        }
+
         public void OnPostLogout()
         {
             Program.Controller.UserID = 0;
@@ -37,86 +122,103 @@ namespace FRED.Pages
 
         public void OnPostConnect(string ipAddress)
         {
-            Program.Temp.SetIP(ipAddress);
-            string server = ipAddress;
+            //Program.Temp.SetIP(ipAddress);
+            string server = Program.Controller.GetIP();
             int port = 21567;
             Byte[] speed = System.Text.Encoding.ASCII.GetBytes("speed50");
 
             try
             {
-                client = new TcpClient();
-                client.Connect(server, port);
-                stream = client.GetStream();
-                stream.Write(speed);
+                Program.client = new TcpClient();
+                Program.client.Connect(server, port);
+                Program.stream = Program.client.GetStream();
+                Program.stream.Write(speed);
             }
-            catch (ArgumentNullException e)
+            catch 
             {
-                Console.WriteLine("ArgumentNullException: {0}", e);
-            }
-            catch (SocketException e)
-            {
-                Console.WriteLine("SocketException: {0}", e);
-            }
+                Program.Temp.SetError("Cant connect to server");
+            }            
         }
 
         public void OnPostDisconnect()
         {
             Byte[] stop = System.Text.Encoding.ASCII.GetBytes("stop");
-            if (stream != null)
+            if (Program.stream != null)
             {
-                stream.Write(stop);
-                stream.Close();
+                Program.stream.Write(stop);
+                Program.stream.Close();
             }
-            if (client != null)
-                client.Close();
+            if (Program.client != null)
+                Program.client.Close();
         }
 
-        public void OnPostAuxConnect(string ipAddress)
+        public void OnPostAuxConnect()
         {
-            Program.Temp.SetIP(ipAddress);
-            string server = ipAddress;
+            Program.Temp.SetError(null);
+            Program.Controller.GetDeviceList();
+            string server = Program.Controller.GetIP();
             int port = 13000;
 
             try
             {
-                coreClient = new TcpClient();
-                coreClient.Connect(server, port);
-                auxStream = coreClient.GetStream();
+                Program.coreClient = new TcpClient();
+                Program.coreClient.Connect(server, port);
+                Program.auxStream = Program.coreClient.GetStream();
+                Program.Temp.SetErrorPanel("none");
             }
-            catch (ArgumentNullException e)
+            catch 
             {
-                Console.WriteLine("ArgumentNullException: {0}", e);
+                Program.Temp.SetError("Cant connect to server");
+                OpenErrorPanel();
             }
-            catch (SocketException e)
-            {
-                Console.WriteLine("SocketException: {0}", e);
-            }
-            Response.Redirect("./UserControls");
+            
+            //Response.Redirect("./UserControls");
         }
 
         public void OnPostAuxDisconnect()
         {
             Byte[] stop = System.Text.Encoding.ASCII.GetBytes("stop");
-            if (stream != null)
+            if (Program.auxStream.CanWrite)
             {
-                auxStream.Write(stop);
-                auxStream.Close();
+                Program.auxStream.Write(stop);
+                Program.auxStream.Close();
             }
-            if (client != null)
-                coreClient.Close();
+            if (Program.client != null)
+                Program.coreClient.Close();
         }
 
-        public void OnPostLightOn()
+        public void OnPostLight(string toggleLight)
         {
-            Byte[] light = System.Text.Encoding.ASCII.GetBytes("light-on");
-            auxStream.Write(light);
-        }
-
-        public void OnPostLightOff()
-        {
-            Byte[] light = System.Text.Encoding.ASCII.GetBytes("light-off");
-            auxStream.Write(light);
-        }
+            if (toggleLight == "on")
+            {                
+                try
+                {
+                    Program.Temp.SetLight("on");
+                    Byte[] cmd = System.Text.Encoding.ASCII.GetBytes("light-on");
+                    Program.auxStream.Write(cmd);
+                }
+                catch
+                {
+                    Program.Temp.SetError("lost connection to the server");
+                    OpenErrorPanel();
+                }                              
+            }
+            else
+            {
+                try
+                {
+                    Program.Temp.SetLight("off");
+                    Byte[] cmd = System.Text.Encoding.ASCII.GetBytes("light-off");
+                    Program.auxStream.Write(cmd);
+                }
+                catch
+                {
+                    Program.Temp.SetError("lost connection to the server");
+                    OpenErrorPanel();
+                }                                         
+            }
+            //Response.Redirect("./UserControls");
+        }               
 
         public void OnPostSetSpeed(int speed)
         {
@@ -125,9 +227,9 @@ namespace FRED.Pages
             string curSpeed = "speed" + mySpeed;
             Byte[] setSpeed = System.Text.Encoding.ASCII.GetBytes(curSpeed);
 
-            if (stream != null)
+            if (Program.stream != null)
             {
-                stream.Write(setSpeed);
+                Program.stream.Write(setSpeed);
             }
         }
 
@@ -140,38 +242,38 @@ namespace FRED.Pages
             Byte[] stop = System.Text.Encoding.ASCII.GetBytes("stop");
             Byte[] home = System.Text.Encoding.ASCII.GetBytes("home");
 
-            if (stream != null)
+            if (Program.stream != null)
             {
                 switch (cmd)
                 {
                     case "Forward":
                         {
-                            stream.Write(forward);
+                            Program.stream.Write(forward);
                             break;
                         }
                     case "Backward":
                         {
-                            stream.Write(backward);
+                            Program.stream.Write(backward);
                             break;
                         }
                     case "Left":
                         {
-                            stream.Write(left);
+                            Program.stream.Write(left);
                             break;
                         }
                     case "Right":
                         {
-                            stream.Write(right);
+                            Program.stream.Write(right);
                             break;
                         }
                     case "Home":
                         {
-                            stream.Write(home);
+                            Program.stream.Write(home);
                             break;
                         }
                     case "Stop":
                         {
-                            stream.Write(stop);
+                            Program.stream.Write(stop);
                             break;
                         }
                 }//switch
@@ -186,33 +288,33 @@ namespace FRED.Pages
             Byte[] right = System.Text.Encoding.ASCII.GetBytes("x+");
             Byte[] home = System.Text.Encoding.ASCII.GetBytes("xy_home");
 
-            if (stream != null)
+            if (Program.stream != null)
             {
                 switch (cmd)
                 {
                     case "Up":
                         {
-                            stream.Write(up);
+                            Program.stream.Write(up);
                             break;
                         }
                     case "Down":
                         {
-                            stream.Write(down);
+                            Program.stream.Write(down);
                             break;
                         }
                     case "Left":
                         {
-                            stream.Write(left);
+                            Program.stream.Write(left);
                             break;
                         }
                     case "Right":
                         {
-                            stream.Write(right);
+                            Program.stream.Write(right);
                             break;
                         }
                     case "Home":
                         {
-                            stream.Write(home);
+                            Program.stream.Write(home);
                             break;
                         }
                 }//switch
@@ -220,23 +322,92 @@ namespace FRED.Pages
         }// onpost CamControl    
 
         public void OnPostSpeak(string text)
-        {
-            Byte[] speak = System.Text.Encoding.ASCII.GetBytes("TTS-" + text);
-            auxStream.Write(speak);
+        {            
+            if (Program.auxStream == null)
+            {
+                Program.Temp.SetError("Not connected to the server");
+                OpenErrorPanel();
+                //Response.Redirect("./UserControls");
+            }
+            else if (Program.Temp.GetError() == null)
+            {
+                try
+                {
+                    Byte[] speak = System.Text.Encoding.ASCII.GetBytes("TTS-" + text);
+                    Program.auxStream.Write(speak);
+                }
+                catch
+                {
+                    Program.Temp.SetError("Lost connection to the server");
+                    OpenErrorPanel();
+                    //Response.Redirect("./UserControls");
+                }
+            }
+            else // web cam is not working
+            {
+                OpenErrorPanel();
+                //Response.Redirect("./UserControls");
+            }            
         }
 
         public async void OnPostFredSees()
-        {
-            await Program.FredVision.GetVision("describe", null);
-            Byte[] speak = System.Text.Encoding.ASCII.GetBytes("TTS-I see" + Program.FredVision.FredSees());
-            auxStream.Write(speak);
+        {            
+            if (Program.auxStream == null)
+            {
+                Program.Temp.SetError("Not connected to the server");
+                OpenErrorPanel();
+                //Response.Redirect("./UserControls");
+            }
+            else if (Program.Temp.GetError() == null)
+            {
+                try
+                {
+                    await Program.FredVision.GetVision("describe", null);
+                    Byte[] speak = System.Text.Encoding.ASCII.GetBytes("TTS-I see" + Program.FredVision.FredSees());
+                    Program.auxStream.Write(speak);
+                }
+                catch
+                {
+                    Program.Temp.SetError("Lost connection to the server");
+                    OpenErrorPanel();
+                    //Response.Redirect("./UserControls");
+                }
+            }
+            else // web cam is not working
+            {
+                OpenErrorPanel();
+                //Response.Redirect("./UserControls");
+            }                            
         }
 
         public async void OnPostFredReads()
-        {
-            await Program.FredVision.GetVision("read", null);
-            Byte[] speak = System.Text.Encoding.ASCII.GetBytes("TTS-" + Program.FredVision.FredReads());
-            auxStream.Write(speak);
+        {            
+            if (Program.auxStream == null)
+            {
+                Program.Temp.SetError("Not connected to the server");
+                OpenErrorPanel();
+                //Response.Redirect("./UserControls");
+            }
+            else if (Program.Temp.GetError() == null)
+            {
+                try
+                {
+                    await Program.FredVision.GetVision("read", null);
+                    Byte[] speak = System.Text.Encoding.ASCII.GetBytes("TTS-" + Program.FredVision.FredReads());
+                    Program.auxStream.Write(speak);
+                }
+                catch
+                {
+                    Program.Temp.SetError("Lost connection to the server");
+                    OpenErrorPanel();
+                    //Response.Redirect("./UserControls");
+                }
+            }
+            else // web cam is not working
+            {
+                OpenErrorPanel();
+                //Response.Redirect("./UserControls");
+            }            
         }
 
         public async void OnPostDetectFace()
@@ -254,8 +425,7 @@ namespace FRED.Pages
                     sayNames += name + " and ";
                 }
                 sayNames = sayNames.Substring(0, sayNames.Length - 5);
-                speak = System.Text.Encoding.ASCII.GetBytes("TTS-Hello, " + sayNames + ". How are you today?");
-                
+                speak = System.Text.Encoding.ASCII.GetBytes("TTS-Hello " + sayNames + "! How are you today?");                
             }
             else
             {
@@ -276,7 +446,7 @@ namespace FRED.Pages
                             string[] greeting = { "How are you today?", "whats up?", "What, you never heard a toy car talk before?" };
                             Random randNum = new Random();
                             randNum.Next(3);
-                            speak = System.Text.Encoding.ASCII.GetBytes("TTS-Hello, " + names[0] + ". How are you today?");                            
+                            speak = System.Text.Encoding.ASCII.GetBytes("TTS-Hello " + names[0] + "! How are you today?");                            
                             break;
                         }
                 }
@@ -284,20 +454,44 @@ namespace FRED.Pages
 
             Program.FredVision.ClearNames();
             names.Clear();
-            auxStream.Write(speak);            
+
+            if (Program.auxStream == null)
+            {
+                Program.Temp.SetError("Not connected to the server");
+                OpenErrorPanel();
+                //Response.Redirect("./UserControls");
+            }
+            else if (Program.Temp.GetError() == null)
+            {
+                try
+                {
+                    Program.auxStream.Write(speak);
+                }
+                catch
+                {
+                    Program.Temp.SetError("Lost connection to the server");
+                    OpenErrorPanel();
+                    //Response.Redirect("./UserControls");
+                }
+            }
+            else // web cam is not working
+            {
+                OpenErrorPanel();
+                //Response.Redirect("./UserControls");
+            }            
         }
         
         public async void OnPostCreatePerson(string name, string desc)
         {
             await Program.FredVision.CreatePerson(name, desc);            
-            await OnGetAsync();
+            
             Response.Redirect("./UserControls");
         }
         
         public async void OnPostDeletePerson(string personID)
         {            
             await Program.FredVision.DeletePerson(personID);            
-            await OnGetAsync();            
+                     
             Response.Redirect("./UserControls");
         }
                 
@@ -305,22 +499,25 @@ namespace FRED.Pages
         {
             Program.Temp.SetPersonID(person);
             display = "normal";
+            displayFacePanel = "none";
+            //Response.Redirect("./UserControls");
         }
         
         public async void OnPostTakePic()
         {
             await Program.FredVision.GetVision("addFace", Program.Temp.GetPersonID());
-            await Program.FredVision.TrainFace();
-            await OnGetAsync();
-            //Thread.Sleep(1000);
+            await Program.FredVision.TrainFace();                        
             Response.Redirect("./UserControls");
-        }
+        }        
 
-        public void CloseWindow()
+        public void OnPostTest()
         {
-            display = "none";
+            if (Program.auxStream != null)
+            {
+                Byte[] speak = System.Text.Encoding.ASCII.GetBytes("auto");
+                Program.auxStream.Write(speak);
+            }            
         }
 
-        
     }
 }

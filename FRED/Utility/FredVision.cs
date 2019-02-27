@@ -18,7 +18,11 @@ namespace FRED.Utility
         private string data = null;        
         private JsonNinja jNinja;
 
+        private string compVisonKey = Environment.GetEnvironmentVariable("AzureCompVision", EnvironmentVariableTarget.User);
+        private string faceAiKey = Environment.GetEnvironmentVariable("AzureFaceAi", EnvironmentVariableTarget.User);
+
         private string badPic;
+        private byte[] img = null;
 
         private void SetData(string data) { this.data = data; }
         public string GetData() { return data; }
@@ -29,7 +33,6 @@ namespace FRED.Utility
         public void ClearNames() { this.names.Clear(); }
         public List<string> GetNames() { return names; }
         
-
         private string name;
         private void SetName(string name) { this.name = name; }
         public string GetName() { return name; }
@@ -37,9 +40,8 @@ namespace FRED.Utility
         public async Task GetVision(string type, string personID)
         {
             client.DefaultRequestHeaders.Clear();
-            string serverIP = Program.Temp.GetIP();            
-            var uri = "";
-            
+            string serverIP = Program.Controller.GetIP();      
+            var uri = "";            
             var queryString = HttpUtility.ParseQueryString(string.Empty);
             
             // Request headers and parameters
@@ -47,14 +49,14 @@ namespace FRED.Utility
             {
                 case "describe":
                     {
-                        client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "266478d1a0f44c8abb164af3c768a48d");
+                        client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", compVisonKey);
                         queryString["maxCandidates"] = "1";
                         uri = "https://eastus.api.cognitive.microsoft.com/vision/v1.0/describe?" + queryString;
                         break;
                     }
                 case "read":
                     {
-                        client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "266478d1a0f44c8abb164af3c768a48d");
+                        client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", compVisonKey);
                         queryString["language"] = "unk";
                         queryString["detectOrientation "] = "true";
                         uri = "https://eastus.api.cognitive.microsoft.com/vision/v1.0/ocr?" + queryString;
@@ -62,13 +64,13 @@ namespace FRED.Utility
                     }
                 case "emotion":
                     {
-                        client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "e97b9e9e76314914b139b73a8a2148cb");
+                        client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", faceAiKey);
                         uri = "https://westus.api.cognitive.microsoft.com/emotion/v1.0/recognize?" + queryString;
                         break;
                     }
                 case "detect":
                     {
-                        client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "e97b9e9e76314914b139b73a8a2148cb");
+                        client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", faceAiKey);
                         queryString["returnFaceId"] = "true";
                         queryString["returnFaceLandmarks"] = "false";
                         //queryString["returnFaceAttributes"] = "false";
@@ -77,7 +79,7 @@ namespace FRED.Utility
                     }
                 case "addFace":
                     {
-                        client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "e97b9e9e76314914b139b73a8a2148cb");
+                        client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", faceAiKey);
                         //personID = personID.Substring(1, personID.Length - 2);
                         uri = "https://eastus.api.cognitive.microsoft.com/face/v1.0/persongroups/1111/persons/" + personID + "/persistedFaces?" + queryString;
                         break;
@@ -87,10 +89,21 @@ namespace FRED.Utility
             // download image from web cam  
             using (WebClient webClient = new WebClient())
             {
-                webClient.DownloadFile("http://" + serverIP + ":8080/?action=snapshot", "fredSees.jpg");
-            }            
-            byte[] img = File.ReadAllBytes("fredSees.jpg");
-                                        
+                try
+                {                    
+                    webClient.DownloadFile("http://" + serverIP + ":8080/?action=snapshot", "fredSees.jpg");
+                    img = File.ReadAllBytes("fredSees.jpg");
+                }
+                catch
+                {
+                    data = null;
+                    Program.Temp.SetError("Web cam not available!");
+                    return;
+                }
+                                
+            }
+            //byte[] img = File.ReadAllBytes("fredSees.jpg");
+
             HttpResponseMessage response;
 
             // Request body
@@ -107,6 +120,7 @@ namespace FRED.Utility
             }
             else
             {
+                data = null;
                 if (type == "addFace")
                     badPic = "The picture was bad please take another one";
             }
@@ -116,47 +130,68 @@ namespace FRED.Utility
         public string FredSees()
         {
             string fredSees = "";
-            JsonObject jsonDoc = (JsonObject)JsonValue.Parse(data);
-            JsonArray jsonArray = (JsonArray)jsonDoc["description"]["captions"];
-
-            foreach (JsonObject obj in jsonArray)
+            if (data != null)
             {
-                JsonValue text;
-                obj.TryGetValue("text", out text);
-                fredSees = text.ToString();
+                
+                JsonObject jsonDoc = (JsonObject)JsonValue.Parse(data);
+                JsonArray jsonArray = (JsonArray)jsonDoc["description"]["captions"];
+
+                foreach (JsonObject obj in jsonArray)
+                {
+                    JsonValue text;
+                    obj.TryGetValue("text", out text);
+                    fredSees = text.ToString();
+                }
             }
+            else
+            {
+                fredSees = " nothing! please check your web cam";
+            }
+            
             return fredSees;
         }
                
         public string FredReads()
-        {            
-            List<string> tempWords = new List<string>();
-            List<string> words = new List<string>();
-
-            jNinja = new JsonNinja(data);
-            string filterCollection = jNinja.GetInfo("\"regions\"");
-            jNinja = new JsonNinja(filterCollection);
-            filterCollection = jNinja.GetInfo("\"lines\"");
-            jNinja = new JsonNinja(filterCollection);
-            List<string> filterCollections = jNinja.GetInfoList("\"words\"");
-
-            for (int i = 0; i < filterCollections.Count; i++)
+        {
+            string fredReads = "";
+            if (data != null)
             {
-                jNinja = new JsonNinja(filterCollections[i]);
-                tempWords = jNinja.GetInfoList("\"text\"");
-                foreach (string word in tempWords)
-                {
-                    words.Add(word);
-                }               
-            }
+                List<string> tempWords = new List<string>();
+                List<string> words = new List<string>();
 
-            string fredReads = string.Join(" ", words);
+                jNinja = new JsonNinja(data);
+                string filterCollection = jNinja.GetInfo("\"regions\"");
+                jNinja = new JsonNinja(filterCollection);
+                filterCollection = jNinja.GetInfo("\"lines\"");
+                jNinja = new JsonNinja(filterCollection);
+                List<string> filterCollections = jNinja.GetInfoList("\"words\"");
+
+                for (int i = 0; i < filterCollections.Count; i++)
+                {
+                    jNinja = new JsonNinja(filterCollections[i]);
+                    tempWords = jNinja.GetInfoList("\"text\"");
+                    foreach (string word in tempWords)
+                    {
+                        words.Add(word);
+                    }
+                }
+
+                fredReads = string.Join(" ", words);
+            }
+            else
+                fredReads = "nothing dumb ass! please check your web cam";
 
             return fredReads;
         }     
              
         public async Task DetectFace()
         {
+            if (data == null)
+            {
+                names.Add("no face");
+                return;
+            }                
+            
             client.DefaultRequestHeaders.Clear();
             List<string> faceIDs = new List<string>();
             
@@ -233,12 +268,9 @@ namespace FRED.Utility
             else
             {
                 faces.Clear();
-                names.Add("no face");
-                //SetName("no face");
+                names.Add("no face");                
             }
-
             
-
         }//DectectFace
 
         public async Task GetPerson(string personID)
@@ -247,7 +279,7 @@ namespace FRED.Utility
             string personsName;            
             var queryString = HttpUtility.ParseQueryString(string.Empty);
             
-            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "e97b9e9e76314914b139b73a8a2148cb");
+            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", faceAiKey);
 
             if (personID != "")
             {
@@ -266,8 +298,7 @@ namespace FRED.Utility
                     jsonDoc.TryGetValue("name", out name);
                     personsName = name.ToString();
                     personsName = personsName.Substring(1, personsName.Length - 2);
-                    names.Add(personsName);
-                    //SetName(personsName);
+                    names.Add(personsName);                    
                 }
                 else
                 {
@@ -277,8 +308,8 @@ namespace FRED.Utility
             }
             else
             {
-                //faces.Add("dont recgonize");
-                SetName("dont recgonize");
+                
+                names.Add("dont recgonize");
             }
             
         }// GetPerson()
@@ -288,7 +319,7 @@ namespace FRED.Utility
             client.DefaultRequestHeaders.Clear();
             var queryString = HttpUtility.ParseQueryString(string.Empty);
             
-            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "e97b9e9e76314914b139b73a8a2148cb");
+            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", faceAiKey);
             
             var uri = "https://eastus.api.cognitive.microsoft.com/face/v1.0/persongroups/1111/persons?" + queryString;
 
@@ -344,7 +375,7 @@ namespace FRED.Utility
             client.DefaultRequestHeaders.Clear();
             var queryString = HttpUtility.ParseQueryString(string.Empty);
             
-            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "e97b9e9e76314914b139b73a8a2148cb");
+            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", faceAiKey);
 
             var uri = "https://eastus.api.cognitive.microsoft.com/face/v1.0/persongroups/1111/persons?" + queryString;
 
@@ -365,7 +396,7 @@ namespace FRED.Utility
         {
             client.DefaultRequestHeaders.Clear();
             var queryString = HttpUtility.ParseQueryString(string.Empty);          
-            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "e97b9e9e76314914b139b73a8a2148cb");
+            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", faceAiKey);
             var uri = "https://eastus.api.cognitive.microsoft.com/face/v1.0/persongroups/1111/persons/"
                 + personID + "?" + queryString;
 
@@ -376,7 +407,7 @@ namespace FRED.Utility
         {
             client.DefaultRequestHeaders.Clear();
             var queryString = HttpUtility.ParseQueryString(string.Empty);            
-            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "e97b9e9e76314914b139b73a8a2148cb");
+            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", faceAiKey);
             var uri = "https://eastus.api.cognitive.microsoft.com/face/v1.0/persongroups/1111/training?" + queryString;
             var response = await client.GetAsync(uri);
             
@@ -401,7 +432,7 @@ namespace FRED.Utility
         {
             client.DefaultRequestHeaders.Clear();
             var queryString = HttpUtility.ParseQueryString(string.Empty);                        
-            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "e97b9e9e76314914b139b73a8a2148cb");
+            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", faceAiKey);
             var uri = "https://eastus.api.cognitive.microsoft.com/face/v1.0/persongroups/1111/train?" + queryString;
             HttpResponseMessage response;
             

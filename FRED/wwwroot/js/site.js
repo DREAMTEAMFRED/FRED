@@ -2,19 +2,19 @@
 
 let faceIsOpen = false;
 
-function ToggleFacePanel() {
+function ToggleFacePanel() {    
     if (!faceIsOpen) { // open panel        
         $('#addFacePanel').animate({
             top: 150
         }, 220, 'swing');
-        faceIsOpen = true;
+        faceIsOpen = true;        
     }
     else { // close panel        
         $('#addFacePanel').animate({
             top: -800
         }, 220, 'swing');
         faceIsOpen = false;
-    }
+    }    
 } // TogglePanel()
 
 let addPersonIsOpen = false;
@@ -22,7 +22,7 @@ let addPersonIsOpen = false;
 function ToggleAddPersonPanel() {
     if (!addPersonIsOpen) { // open panel        
         $('#addPersonPanel').animate({
-            top: 150
+            top: 200
         }, 220, 'swing');
         addPersonIsOpen = true;
     }
@@ -34,6 +34,18 @@ function ToggleAddPersonPanel() {
     }
 } // TogglePanel()
 
+function FredSees() {
+    $('#fredSeesForm').submit();
+}
+
+function DetectFace() {
+    $('#detectFaceForm').submit();
+}
+
+function FredReads() {
+    $('#fredReadsForm').submit();
+}
+
 
 function SubmitForm() {
     $('#addFaceFormSubmit').submit();
@@ -44,13 +56,25 @@ function CloseWindow() {
     $('#closeWindow').submit();
 }
 
+function CloseFacePanel() {
+    $('#closeFacePanelForm').submit();
+}
+
+function CloseControlPanel() {        
+    $('#closeCtrlPanel').submit();    
+}
+
+function CloseVisionPanel() {    
+    $('#closeVisionPanelForm').submit();
+}
+
 
 // refresh page and and run method
 window.onload = function () {
     var reloading = sessionStorage.getItem("reloading");
     if (reloading) {
         sessionStorage.removeItem("reloading");
-        ToggleFacePanel();
+        //ToggleFacePanel();
     }
 }
 
@@ -58,31 +82,6 @@ function Refresh() {
     sessionStorage.setItem("reloading", "true");
     document.location.reload();
 }
-
-/*
-$(function () {
-    $('#addFaceBtn').click(function (e) {
-        e.preventDefault();
-        $('#confirmDialog').dialog("open");
-    });
-
-    $("#confirmDialog").dialog({
-        autoOpen: false,
-        modal: true,
-        resizable: false,
-        buttons: {
-            "Ok": function () {
-                $("#addFaceForm").submit();
-            },
-            "Cancel": function () {
-                $(this).dialog("close");
-            }
-        },
-    });
-});
-*/
-
-
 
 
 /*

@@ -5,7 +5,7 @@ body {
     margin: 0 auto;
     padding-top: 10px;
     padding-bottom: 20px;
-    background: #1f2e45;
+    background: #3e3d3b; /*#1f2e45*/
     background-size: cover;
 }
 
@@ -115,28 +115,28 @@ body {
     background: #fff;
     text-align: center;    
 }
-    #webCam img {
+    #webCam img {        
+        position: fixed;
+        z-index: 3;
         margin-left: calc(50% - 320px);
         padding-top: 100px;
     }
-
-#controls {
-    width: 100%;
+        #webCamAlt {
+            position: fixed;
+            z-index: 2;
+            margin-left: calc(50% - 320px);
+            padding-top: 100px;
+        }
+#carInterior {
+    
+    
 }
-
-#carControl {
-    width: 300px;
-    text-align: center;
-    margin: 20px 20px 20px 250px;
-    float: left;
-}
-
-#camControl {
-    width: 300px;
-    text-align: center;
-    margin: 20px;
-    float: left;
-}
+    #interior {        
+        position: fixed;
+        top: 460px;
+        z-index: 4;
+        margin-left: calc(50% - 560px);
+    }
 
 .title {
     width: 100%;
@@ -146,69 +146,249 @@ body {
     margin: 10px;
 }
 
-.controlLeft {
-    width: 100px;
-    height: 100px;
-    line-height: 100px;
-    white-space: nowrap;
-    float: left;
+#connect {
+    margin: 75px 0 0 20px;
 }
 
-.controlCenter {
-    width: 100px;
-    float: left;
+#toggleDiv {
+    width: 150px;
+    height: 420px;
+    margin: 100px 0 0 20px;
 }
-
-.controlRight {
-    width: 100px;
-    height: 100px;
-    line-height: 100px;
-    white-space: nowrap;
-    float: left;
-}
-
-.controlStop {
-    width: 100%;
-    clear: both;
-}
-
-#speedControl {
-    width: 200px;
-    margin: 20px;
-    float: left;
-}
-
-.slider {
-    -webkit-appearance: none;
-    width: 200px;
-    height: 25px;
-    background: #d3d3d3;
-    outline: none;
-    opacity: 0.7;
-    -webkit-transition: .2s;
-    transition: opacity .2s;
-}
-
-    .slider:hover {
-        opacity: 1;
+    .toggleBtn {
+        width: 150px;
+        
+        float: left;
     }
 
-    .slider::-webkit-slider-thumb {
+#controlPanel {
+    position: fixed;
+    z-index: 19;
+    width: 780px;
+    height: 300px;
+    margin-left: calc(50% - 390px);
+    padding: 10px 10px 10px 20px;
+    background: rgba(0, 0, 0, .8);
+    border: 1px solid #000;
+    border-radius: 12px;
+    box-shadow: 0 4px 11px #999;
+    top: 580px;
+    color: #fff;    
+
+    display: grid;          
+    grid-template-columns: repeat(6, 1fr);
+    grid-auto-rows: minmax(auto, auto);
+    grid-template-areas: 
+        "car car car  .  cam cls "
+        " .  rup lgt lgt mpp  . "        
+        "rlf stp rrt mlt hom mrt"
+        " .  rdn spd spd mdn  . ";
+}
+    #controlPanel input {
+        align-self: center;        
+    }
+    #controlPanel:hover input {
+        
+    }
+    #carTitle {
+        grid-area: car;
+        align-self: center;
+        text-align: center;
+        text-decoration: underline;
+        font-size: 1.2em;
+    }
+    #camTitle {
+        grid-area: cam;
+        align-self: center;
+        text-align: center;
+        text-decoration: underline;    
+        font-size: 1.2em;
+    }
+    #carStop {
+        grid-area: stp; 
+        display: flex;
+        justify-content: center;
+    }
+    #carUp {
+        grid-area: rup;    
+        display: flex;
+        justify-content: center;
+    }
+    #carDown {
+        grid-area: rdn;   
+        display: flex;
+        justify-content: center;
+    }
+    #carLeft {
+        grid-area: rlf;  
+        padding-left: 50px;
+        display: flex;
+        justify-content: center;         
+    }
+    #carRight {
+        grid-area: rrt; 
+        padding-right: 50px;
+        display: flex;
+        justify-content: center; 
+    }
+    #camHome {
+        grid-area: hom;  
+        display: flex;
+        justify-content: center; 
+    }
+    #camUp {
+        grid-area: mpp;  
+        display: flex;
+        justify-content: center; 
+    }
+    #camDown {
+        grid-area: mdn;  
+        display: flex;
+        justify-content: center; 
+    }
+    #camLeft {
+        grid-area: mlt;   
+        padding-left: 100px;
+        display: flex;
+        justify-content: center; 
+    }
+    #camRight {
+        grid-area: mrt;  
+        padding-right: 120px;
+        display: flex;
+        justify-content: center; 
+    }
+    #light {
+        grid-area: lgt;         
+        display: flex;
+        justify-content: center; 
+    }
+    #speedControl {
+        grid-area: spd;  
+        display: flex;
+        text-align: center;
+        justify-content: center;
+        align-self: center;
+        font-size: 1.1em;
+    }
+        #speedControl span {
+            padding-top: 30px;
+        }
+    #closeControlPanel{
+        grid-area: cls;               
+        font-size: 1.7em;
+        text-align: right;
+    }
+    .ctrlBtn {
+        width: 60px;        
+    }
+    .ctrlBtn:hover {
+        opacity: .7;
+    }
+    .slider {
         -webkit-appearance: none;
-        width: 25px;
-        height: 25px;
-        background: #4CAF50;
-        cursor: pointer;
+        width: 200px;
+        height: 10px;
+        background: #d3d3d3;
+        outline: none;
+        opacity: 0.7;
+        -webkit-transition: .2s;
+        transition: opacity .2s;    
+    }
+        .slider:hover {
+            opacity: 1;
+        }
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: #4CAF50;
+            cursor: pointer;
+        }
+
+#visionPanel {
+    position: fixed;
+    z-index: 19;
+    width: 780px;
+    height: 300px;
+    margin-left: calc(50% - 390px);
+    padding: 10px 10px 10px 20px;
+    background: rgba(0, 0, 0, .8);
+    border: 1px solid #000;
+    border-radius: 12px;
+    box-shadow: 0 4px 11px #999;
+    top: 580px;
+    color: #fff;    
+
+    display: grid;          
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: minmax(auto, auto);
+    grid-template-areas: 
+        "  .   .  clo"
+        " spk spk spk"
+        " fac see rea";
+}
+    #visionPanel input {        
+        align-self: center;        
+    }
+    #fredSees {
+        grid-area: see;
+        display: flex;
+        justify-content: center;
+    }
+    #fredDetectFace {
+        grid-area: fac;
+        display: flex;
+        justify-content: center;
+    }
+    #fredReads {
+        grid-area: rea;
+        display: flex;
+        justify-content: center;
+    }
+    #fredSpeak {
+        grid-area: spk;
+        display: flex;
+        justify-content: center;
+        font-size: 1.4em;
+        
+    }
+        #speakInput {
+            width: 350px;
+            padding: 1px;
+            padding-left: 4px;
+            color: #000;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1em;
+            font-family: 'Roboto', sans-serif;
+        }
+        #speakBtn {
+            width: 100px;
+            padding: 1px;
+            margin-left: 8px;
+            color: #000;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1em;
+            font-family: 'Roboto', sans-serif;
+        }
+            #speakBtn:hover {
+                background: #bb8;
+                color: #444;
+            }
+    #closeVisionPanel {
+        grid-area: clo;
+        text-align: right;
+        font-size: 1.7em;
+    }
+    .detectFace {
+        width: 80px;
     }
 
-    .slider:-moz-range-thumb {
-        width: 25px;
-        height: 25px;
-        background: #4CAF50;
-        cursor: pointer;
-    }
-
-#addFacePanel {
+    
+#addFacePanel {    
     position: fixed;
     z-index: 13;
     width: 840px;
@@ -219,7 +399,7 @@ body {
     border: 1px solid #000;
     border-radius: 12px;
     box-shadow: 0 4px 11px #999;
-    top: -800px;
+    top: 150px;
     overflow-y: auto;
     overflow-x: hidden;
     color: #fff;
@@ -369,7 +549,7 @@ body {
     border: 1px solid #000;
     border-radius: 12px;
     box-shadow: 0 4px 11px #999;
-    top: 500px;
+    top: 555px;
     color: #fff;
     display: normal;
 }
@@ -398,6 +578,38 @@ body {
             color: #bb8;
         }
 
+#errorPanel {
+    position: fixed;
+    z-index: 6;
+    width: 400px;
+    height: 300px;
+    margin-left: calc(50% - 200px);
+    padding: 30px;
+    background: rgba(0, 0, 0, .8);
+    border: 1px solid #000;
+    border-radius: 12px;
+    box-shadow: 0 4px 11px #999;
+    top: 250px;
+    color: #fff;
+    text-align: center;
+    font-size: 1.2em;
+}    
+        #errorPanel img {
+            width: 60px;
+            margin-bottom: 15px;
+        }
+        #reconnectBtn {
+            width: 100px;
+            padding: 1px;
+            margin-top: 25px;
+            color: #000;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1em;
+            font-family: 'Roboto', sans-serif;
+        }
+
+
 .white {
     color: #fff;
 }
@@ -407,6 +619,20 @@ body {
 .centered-cell {
     padding-left: 50px;
 }
+
+footer {
+    width: 100%;
+    position: fixed;
+    top: 880px;
+    z-index: 5;
+    text-align: center;
+    
+}
+    footer span {        
+        color: #a7b2b4;
+        font-size: 1.1em;
+        font-weight: 500;
+    }
 
 /* Wrapping element */
 /* Set some basic padding to keep content from hitting the edges */

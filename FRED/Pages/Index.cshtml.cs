@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Sockets;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -9,10 +10,15 @@ namespace FRED.Pages
 { 
     public class IndexModel : PageModel
     {
+        
+        //public static TcpClient coreClient = null;
+        //private static NetworkStream stream = null;
+        //private static NetworkStream auxStream = null;
+
         public void OnGet()
         {
-            /// this is testing git hub
-            /// this is a second test hope it works
+            //Program.Controller.GetDeviceList();
+            Program.FredVision.GetFacesList().Wait();
         }
 
         public void OnPostLogin(string username, string password)
@@ -25,6 +31,37 @@ namespace FRED.Pages
             else
             {
                 Response.Redirect("./Error");
+            }            
+        }
+
+        public void OnPostConnect()
+        {
+            Program.Temp.SetError(null);
+            Program.Controller.GetDeviceList();
+            if (Program.Controller.GetDeviceStatus() == "active")
+            {
+                string server = Program.Controller.GetIP();
+                int port = 13000;
+
+                try
+                {
+                    Program.coreClient = new TcpClient();
+                    Program.coreClient.Connect(server, port);
+                    Program.auxStream = Program.coreClient.GetStream();
+                }
+                catch
+                {
+                    Program.Temp.SetErrorPanel("block");
+                    Program.Temp.SetError("Cant connect to server");
+                }
+                Response.Redirect("./UserControls");
+            }
+            else
+            {
+                // put error message to restart fred
+                Program.Temp.SetErrorPanel("block");
+                Program.Temp.SetError("Cant connect to server");
+                Response.Redirect("./UserControls");
             }
             
         }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Sockets;
 using System.Threading.Tasks;
 using FRED.Utility;
 using Microsoft.AspNetCore;
@@ -19,7 +20,11 @@ namespace FRED
         public static Password Password = new Password();
         public static Temp Temp = new Temp();
         public static FredVision FredVision = new FredVision();
-        
+        public static TcpClient client = null;
+        public static TcpClient coreClient = null;
+        public static NetworkStream stream = null;
+        public static NetworkStream auxStream = null;
+
 
         public static void Main(string[] args)
         {

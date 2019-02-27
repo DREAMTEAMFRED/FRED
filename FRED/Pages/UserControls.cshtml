@@ -4,21 +4,143 @@
     ViewData["Title"] = "UserControls";
 }
 
-<div id="addFacePanel">
+<!-- ***** Hidden Panels ***** -->
+
+<div id="controlPanel" style="display: @Model.displayControlPanel;">
+    <div id="carTitle"><h4>Car</h4></div>
+    <div id="camTitle"><h4>Cam</h4></div>
+    <div id="carUp">
+        <form method="post" asp-page-handler="Control">
+            <input id="forwardBtn" type="hidden" name="cmd" value="Forward" />
+            <input type="image" class="ctrlBtn" src="~/images/red-up-arrow.png" />
+        </form>
+    </div>
+    <div id="carDown">
+        <form method="post" asp-page-handler="Control">
+            <input id="backwardBtn" type="hidden" name="cmd" value="Backward" />
+            <input type="image" class="ctrlBtn" src="~/images/red-down-arrow.png" />
+        </form>
+    </div>
+    <div id="carLeft">
+        <form method="post" asp-page-handler="Control">
+            <input id="leftBtn" type="hidden" name="cmd" value="Left" />
+            <input type="image" class="ctrlBtn" src="~/images/red-left-arrow.png" />
+        </form>
+    </div>
+    <div id="carRight">
+        <form method="post" asp-page-handler="Control">
+            <input id="rightBtn" type="hidden" name="cmd" value="Right" />
+            <input type="image" class="ctrlBtn" src="~/images/red-right-arrow.png" />
+        </form>
+    </div>
+    <div id="carStop">
+        <form method="post" asp-page-handler="Control">
+            <input type="hidden" name="cmd" value="Stop" />
+            <input type="image" class="ctrlBtn" src="~/images/red-stop-btn.png" />
+        </form>
+    </div>
+    <div id="camUp">
+        <form method="post" asp-page-handler="CamControl">
+            <input type="hidden" name="cmd" value="Up" />
+            <input type="image" class="ctrlBtn" src="~/images/blue-up-arrow.png" />
+        </form>
+    </div>
+    <div id="camDown">
+        <form method="post" asp-page-handler="CamControl">
+            <input type="hidden" name="cmd" value="Down" />
+            <input type="image" class="ctrlBtn" src="~/images/blue-down-arrow.png" />
+        </form>
+    </div>
+    <div id="camLeft">
+        <form method="post" asp-page-handler="CamControl">
+            <input type="hidden" name="cmd" value="Left" />
+            <input type="image" class="ctrlBtn" src="~/images/blue-left-arrow.png" />
+        </form>
+    </div>
+    <div id="camRight">
+        <form method="post" asp-page-handler="CamControl">
+            <input type="hidden" name="cmd" value="Right" />
+            <input type="image" class="ctrlBtn" src="~/images/blue-right-arrow.png" />
+        </form>
+    </div>
+    <div id="camHome">
+        <form method="post" asp-page-handler="CamControl">
+            <input type="hidden" name="cmd" value="Home" />
+            <input type="image" class="ctrlBtn" src="~/images/blue-home-btn.png" />
+        </form>
+    </div>
+    <div id="light">
+        <form method="post" asp-page-handler="Light">
+            @if (Model.light == "off")
+            {
+                <input type="hidden" name="toggleLight" value="on" />
+                <input type="image" class="ctrlBtn" src="~/images/headlight-off.png" />
+            }
+            else
+            {
+                <input type="hidden" name="toggleLight" value="off" />
+                <input type="image" class="ctrlBtn" src="~/images/headlight-on.png" />
+            }
+        </form>
+    </div>
+    <div id="speedControl">
+        <form method="post" asp-page-handler="SetSpeed">
+            <input type="range" min="10" max="100" name="speed" value="@Model.mySpeed" class="slider" id="mySpeed">
+            <h4>Speed: <span id="speed"></span></h4>
+        </form>
+    </div>
+    <div id="closeControlPanel">
+        <form method="post" asp-page-handler="CloseControlPanel" id="closeCtrlPanel">
+            <i class="far fa-times-circle ctrlBtn" onclick="CloseControlPanel()"></i>
+        </form>
+    </div>
+</div>
+
+<div id="visionPanel" style="display: @Model.displayVisionPanel;">
+    <div id="closeVisionPanel">
+        <form method="post" asp-page-handler="CloseVisionPanel" id="closeVisionPanelForm">
+            <i class="far fa-times-circle" onclick="CloseVisionPanel()"></i>
+        </form>
+    </div>
+    <div id="fredSpeak">
+        <form method="post" asp-page-handler="Speak">
+            <span>Fred says....</span>
+            <input id="speakInput" type="text" name="text" value="enter text to speak" />
+            <input id="speakBtn" type="submit" value="Speak" />
+        </form>
+    </div>
+    <div id="fredDetectFace">
+        <form method="post" asp-page-handler="DetectFace">
+            <input class="ctrlBtn" type="image" onclick="DetectFace()" src="~/images/detect-face-fred-512.png" title="Detect Faces" />
+        </form>
+    </div>
+    <div id="fredSees">
+        <form method="post" asp-page-handler="FredSees" id="fredSeesForm">
+            <input class="ctrlBtn" type="image" onclick="FredSees()" src="~/images/fred-sees.png" title="What does FRED see" />
+        </form>
+    </div>
+    <div id="fredReads">
+        <form method="post" asp-page-handler="FredReads" id="fredReadsForm">
+            <input class="ctrlBtn" type="image" onclick="FredReads()" src="~/images/fred-reads-512.png" title="Make FRED read" />
+        </form>
+    </div>
+</div>
+
+<div id="addFacePanel" style="display: @Model.displayFacePanel;">
     <div id="facePanelTop">
-        <div id="closeTop"><i onclick="ToggleFacePanel()" class="far fa-times-circle closeWindow"></i></div>        
+        <div id="closeTop">
+            <form method="post" asp-page-handler="CloseAddFacePanel" id="closeFacePanelForm">
+                <i class="far fa-times-circle" onclick="CloseFacePanel()"></i>
+            </form>
+        </div>
         <table id="faceTable">
-            
             <tr>
                 <th><h4>Name</h4></th>
                 <th><h4>Description</h4></th>
                 <th><h4>Stored Faces</h4></th>
-                <th></th>
-                <th></th>
             </tr>
             @for (int i = 0; i < Program.Temp.GetListNames().Count; i++)
             {
-
                 <tr>
                     <td>@Program.Temp.GetListNames()[i]</td>
                     <td>@Program.Temp.GetListDesc()[i]</td>
@@ -26,8 +148,7 @@
                     <td>
                         <form method="post" asp-page-handler="AddFace" id="addFaceFormSubmit">
                             <input type="hidden" name="person" value="@Program.Temp.GetListPersonIDs()[i]" />
-                            <input id="addFaceBtn" class="addFaceBtn" type="image"
-                                   src="~/images/addFace-btn.png" />
+                            <input id="addFaceBtn" class="addFaceBtn" type="image" src="~/images/addFace-btn.png" />
                         </form>
                     </td>
                     <td>
@@ -40,11 +161,12 @@
             }
         </table>
     </div>
+
     <div id="facePanelBottom">
-        <div id="facePanelBottomLeft">            
-            <i class="fas fa-user-plus" onclick="ToggleFacePanel(); ToggleAddPersonPanel();"></i>                           
+        <div id="facePanelBottomLeft">
+            <i class="fas fa-user-plus" onclick="ToggleFacePanel(); ToggleAddPersonPanel();"></i>
         </div>
-        <div id="facePanelBottomMiddle" onch="ToggleFacePanel()">                                          
+        <div id="facePanelBottomMiddle" onch="ToggleFacePanel()">
             @if (Program.Temp.GetTrainingStatus() != "succeeded")
             {
                 <span calss="gold" id="trainingStatus">Training Status - @Program.Temp.GetTrainingStatus()</span>
@@ -53,7 +175,7 @@
         <div id="facePanelBottomRight">
             <a href="./UserControls">
                 <i onclick="Refresh()" class="fas fa-sync-alt"></i>
-            </a>            
+            </a>
         </div>
     </div>
 </div>
@@ -65,24 +187,20 @@
             <table id="addPersonTable">
                 <tr>
                     <td>Name:</td>
-                    <td><input type="text" name="name"/></td>
+                    <td><input type="text" name="name" /></td>
                 </tr>
                 <tr>
                     <td>Description:</td>
-                    <td><input type="text" name="desc"/></td>
+                    <td><input type="text" name="desc" /></td>
                 </tr>
-            </table>                        
+            </table>
             <br />
-            <input id="addPersonBtn" type="submit" onclose="ToggleTakePicPanel()" value="Add Person" />            
+            <input id="addPersonBtn" type="submit" onclose="ToggleTakePicPanel()" value="Add Person" />
         </form>
     </div>
     <div id="addPersonPanelBottom">
-        <i class="fas fa-arrow-left" onclick="ToggleFacePanel(); ToggleAddPersonPanel();">&nbsp;Back</i>
+        <i class="fas fa-arrow-left" onclick="ToggleAddPersonPanel();">&nbsp;Back</i>
     </div>
-</div>
-
-<div id="confirmDialog" title="Save Face" hidden>
-    <p>Do you want to save changes </p>
 </div>
 
 <div id="takePicPanel" style="display: @Model.display;">
@@ -102,11 +220,25 @@
     </div>
 </div>
 
+<div id="errorPanel" style="display: @Model.displayErrorPanel;">
+    <img src="~/images/error-icon-white.png" />
+    <p>@Model.error</p>
+    Reboot F.R.E.D and try to reconnect
+    <form method="post" asp-page-handler="AuxConnect">
+        <input id="reconnectBtn" type="submit" value="Reconnect" />
+    </form>
+</div>
+
+<!-- ***** End of Hidden Panels ***** -->
+
 @{
-    <div id="webCam">              
-        <img src="http://@Model.serverIP:8080/?action=stream">
+    <div id="webCam">
+        <img id="webCamAlt" src="~/images/WebCam-alt.png" />
+        <img src="http://@Model.serverIP:8080/?action=stream" />
     </div>
 }
+
+<!--
 <div id="controls">
     <div id="carControl">
         <div class="title"><h3>Car Controls</h3></div>
@@ -155,15 +287,9 @@
         </div>
     </div>
 </div>
-
-<div id="speedControl">
-    <form method="post" asp-page-handler="SetSpeed">
-        <input type="range" min="10" max="100" name="speed" value="@Model.mySpeed" class="slider" id="mySpeed">
-        <h3 class="white">Speed: <span id="speed"></span></h3>
-    </form>
-</div>
-
-<div id="connect" style="margin: 20px">
+-->
+<!--
+<div id="connect">
     <form method="post" asp-page-handler="Connect">
         <input type="text" name="ipAddress" value="ip address" />
         <input class="controlStop" type="submit" name="Connect" value="Connect" />
@@ -189,44 +315,49 @@
     </form>
 </div>
 
-<div id="lightOn" style="margin: 20px">
-    <form method="post" asp-page-handler="LightOn">
-        <input class="controlStop" type="submit" name="Disconnect" value="LightOn" />
+<div id="controlPanelss" style="margin: 20px">
+    <form method="post" asp-page-handler="OpenControlPanel">
+        <input class="controlStop" type="submit" name="" value="Control Panel" />
+    </form>
+</div>-->
+<!--
+<div id="controlPanelss" style="margin: 20px">
+    <form method="post" asp-page-handler="OpenVisionPanel">
+        <input class="controlStop" type="submit" name="" value="Vision Panel" />
     </form>
 </div>
 
-<div id="lightOff" style="margin: 20px">
-    <form method="post" asp-page-handler="LightOff">
-        <input class="controlStop" type="submit" name="Disconnect" value="LightOff" />
+<div id="faceList" style="margin: 20px">
+    <form method="post" asp-page-handler="OpenAddFacePanel">
+        <input class="controlStop" onclick="" type="submit" value="Get Face list" />
     </form>
 </div>
 
-<div id="speak" style="margin: 20px">
-    <form method="post" asp-page-handler="Speak">
-        <input type="text" name="text" value="text" />
-        <input type="submit" value="Speak" />
+<div id="test" style="margin: 20px">
+    <form method="post" asp-page-handler="Test">
+        <input class="controlStop" type="submit" value="Test KB" />
+    </form>
+</div>
+-->
+<div id="toggleDiv">
+    <form method="post" asp-page-handler="OpenControlPanel">
+        <input class="toggleBtn" type="image" src="~/images/toggle-btn-off.png" />
+    </form>
+    <form method="post" asp-page-handler="OpenAddFacePanel">
+        <input class="toggleBtn" type="image" src="~/images/toggle-btn-off.png" />
+    </form>
+    <form method="post" asp-page-handler="OpenVisionPanel">
+        <input class="toggleBtn" type="image" src="~/images/toggle-btn-off.png" />
+    </form>
+    <form method="post" asp-page-handler="Test">
+        <input class="toggleBtn" type="image" src="~/images/toggle-btn-off.png" />
     </form>
 </div>
 
-<div id="fredSees" style="margin: 20px">
-    <form method="post" asp-page-handler="FredSees">
-        <input class="controlStop" type="submit" value="Fred Sees" />
-    </form>
+<div id="carInterior">
+    <img id="interior" src="~/images/cartoon-car-interior.png" />
 </div>
 
-<div id="fredReads" style="margin: 20px">
-    <form method="post" asp-page-handler="FredReads">
-        <input class="controlStop" type="submit" value="Fred Reads" />
-    </form>
-</div>
-
-<div id="detectFace" style="margin: 20px">
-    <form method="post" asp-page-handler="DetectFace">
-        <input class="controlStop" type="submit" value="Detect Face" />
-    </form>
-</div>
-
-<div id="faceList" style="margin: 20px">         
-    <input class="controlStop" onclick="ToggleFacePanel()" type="submit" value="Get Face list" />            
-</div>
-
+<footer>
+    <span>&copy;&nbsp;Wes Kellar 2019 TriOS Student</span>
+</footer>
