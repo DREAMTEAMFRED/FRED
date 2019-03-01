@@ -1,5 +1,4 @@
-/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification 
-for details on configuring this project to bundle and minify static web assets. */
+
 body {
     width: 100%;
     margin: 0 auto;
@@ -13,6 +12,11 @@ body {
 {
     padding-left: 15px;
     padding-right: 15px;
+}
+
+@font-face {
+    font-family: robo;
+    src: url(COMPUTERRobot.ttf);
 }
 
 #login 
@@ -53,7 +57,6 @@ body {
 {
     color: #bb8;
 }
-
 
 
 ///////////// /* AddUser Page*/ //////////////
@@ -137,6 +140,31 @@ body {
         z-index: 4;
         margin-left: calc(50% - 560px);
     }
+    #screen {
+        position: fixed;
+        z-index: 500;
+        width: 550px;
+        top: 250px;
+        margin-left: calc(50% + 50px);
+    }
+    #displayText {
+        position: fixed;
+        z-index: 510;
+        width: 190px;
+        height: 170px;
+        top: 360px;
+        margin-left: calc(50% + 185px);
+        color: #4CAF50;
+        text-align: center;
+        font-size: 1.5em;        
+        word-break: normal; 
+        word-wrap: normal;
+        font-family: robo;
+    }
+    #popUpComputer {
+        
+
+    }
 
 .title {
     width: 100%;
@@ -153,11 +181,10 @@ body {
 #toggleDiv {
     width: 150px;
     height: 420px;
-    margin: 100px 0 0 20px;
+    margin: 150px 0 0 20px;
 }
     .toggleBtn {
-        width: 150px;
-        
+        width: 200px;        
         float: left;
     }
 
@@ -580,7 +607,7 @@ body {
 
 #errorPanel {
     position: fixed;
-    z-index: 6;
+    z-index: 99;
     width: 400px;
     height: 300px;
     margin-left: calc(50% - 200px);
@@ -608,6 +635,8 @@ body {
             font-size: 1em;
             font-family: 'Roboto', sans-serif;
         }
+
+
 
 
 .white {

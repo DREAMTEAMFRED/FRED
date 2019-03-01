@@ -9,12 +9,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace FRED.Pages
 { 
     public class IndexModel : PageModel
-    {
-        
-        //public static TcpClient coreClient = null;
-        //private static NetworkStream stream = null;
-        //private static NetworkStream auxStream = null;
-
+    {               
         public void OnGet()
         {
             //Program.Controller.GetDeviceList();
@@ -51,7 +46,7 @@ namespace FRED.Pages
                 }
                 catch
                 {
-                    Program.Temp.SetErrorPanel("block");
+                    Program.Temp.SetErrorPanel("none"); // make sure its set to block
                     Program.Temp.SetError("Cant connect to server");
                 }
                 Response.Redirect("./UserControls");
@@ -63,7 +58,7 @@ namespace FRED.Pages
                 Program.Temp.SetError("Cant connect to server");
                 Response.Redirect("./UserControls");
             }
-            
+            Program.coreClient.Close();
         }
     }
 }

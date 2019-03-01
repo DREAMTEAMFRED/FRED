@@ -46,7 +46,6 @@ function FredReads() {
     $('#fredReadsForm').submit();
 }
 
-
 function SubmitForm() {
     $('#addFaceFormSubmit').submit();
     ToggleTakePicPanel();
@@ -76,6 +75,12 @@ window.onload = function () {
         sessionStorage.removeItem("reloading");
         //ToggleFacePanel();
     }
+    
+    setTimeout(function () {
+        $('#screen').fadeOut(2000)  
+        $('#displayText').fadeOut(2000)
+    }, 3000);
+    
 }
 
 function Refresh() {

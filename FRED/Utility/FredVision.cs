@@ -102,8 +102,7 @@ namespace FRED.Utility
                 }
                                 
             }
-            //byte[] img = File.ReadAllBytes("fredSees.jpg");
-
+            
             HttpResponseMessage response;
 
             // Request body
@@ -166,17 +165,25 @@ namespace FRED.Utility
                 jNinja = new JsonNinja(filterCollection);
                 List<string> filterCollections = jNinja.GetInfoList("\"words\"");
 
-                for (int i = 0; i < filterCollections.Count; i++)
+                if (filterCollections.Count > 0)
                 {
-                    jNinja = new JsonNinja(filterCollections[i]);
-                    tempWords = jNinja.GetInfoList("\"text\"");
-                    foreach (string word in tempWords)
+                    for (int i = 0; i < filterCollections.Count; i++)
                     {
-                        words.Add(word);
+                        jNinja = new JsonNinja(filterCollections[i]);
+                        tempWords = jNinja.GetInfoList("\"text\"");
+                        foreach (string word in tempWords)
+                        {
+                            words.Add(word);
+                        }
                     }
-                }
 
-                fredReads = string.Join(" ", words);
+                    fredReads = string.Join(" ", words);
+                }
+                else
+                {
+                    fredReads = "I dont see anything to read";
+                }
+                
             }
             else
                 fredReads = "nothing dumb ass! please check your web cam";
@@ -257,8 +264,7 @@ namespace FRED.Utility
                     else
                         faces.Add(jNinja.GetInfo("\"personId\""));
                 }
-                
-                
+                                
                 foreach (string face in faces)
                 {
                     await GetPerson(face);
@@ -303,8 +309,7 @@ namespace FRED.Utility
                 else
                 {
                     // do nothing yet
-                }               
-                
+                }                               
             }
             else
             {

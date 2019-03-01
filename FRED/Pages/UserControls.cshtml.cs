@@ -9,13 +9,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace FRED.Pages
 {
     public class UserControlsModel : PageModel
-    {
-        //private static TcpClient client = null;
-        //private static TcpClient coreClient = null;
-        //private static NetworkStream stream = null;
-        //private static NetworkStream auxStream = null;
-        public string serverIP = Program.Controller.GetIP();
-                
+    {        
+        public string serverIP = Program.Controller.GetIP();                
         public string display = "none";
         public string error = Program.Temp.GetError();
         public string displayErrorPanel = Program.Temp.GetErrorPanelStatus();
@@ -24,24 +19,14 @@ namespace FRED.Pages
         public string displayFacePanel = Program.Temp.GetFacePanelStatus();
         public string light = Program.Temp.GetLightStatus();
         public int mySpeed = Program.Temp.GetSpeed();
+        public string displayTextPanel = Program.Temp.GetTextPanelStatus();
+        public string displayText = Program.Temp.GetDisplayText();
+
 
         public void OnGet()
         {            
-            /*
-            if (Program.Temp.GetError() != null)
-            {
-                Program.Temp.SetErrorPanel("block");
-                Program.Temp.SetFacePanel("none");
-                Program.Temp.SetVisionPanel("none");
-                Program.Temp.SetControlPanel("none");                
-            }
-            else
-            {
-                //OnPostAuxConnect();
-                //Program.FredVision.GetFacesList().Wait();
-            }
-            */                
-        }
+            Program.Temp.SetTextPanel("none");
+        }        
 
         public void OpenErrorPanel()
         {
@@ -49,6 +34,7 @@ namespace FRED.Pages
             Program.Temp.SetFacePanel("none");
             Program.Temp.SetVisionPanel("none");
             Program.Temp.SetControlPanel("none");
+            //Response.Redirect("./UserControls");
         }
 
         public void CloseWindow()
@@ -57,9 +43,7 @@ namespace FRED.Pages
         }
 
         public void OnPostOpenAddFacePanel()
-        {
-            Program.FredVision.GetFacesList().Wait();
-
+        {          
             if (displayFacePanel == "none")                            
                 Program.Temp.SetFacePanel("block");                           
             else
@@ -121,8 +105,7 @@ namespace FRED.Pages
         }
 
         public void OnPostConnect(string ipAddress)
-        {
-            //Program.Temp.SetIP(ipAddress);
+        {            
             string server = Program.Controller.GetIP();
             int port = 21567;
             Byte[] speed = System.Text.Encoding.ASCII.GetBytes("speed50");
@@ -164,7 +147,7 @@ namespace FRED.Pages
                 Program.coreClient = new TcpClient();
                 Program.coreClient.Connect(server, port);
                 Program.auxStream = Program.coreClient.GetStream();
-                Program.Temp.SetErrorPanel("none");
+                Program.Temp.SetErrorPanel("none");                
             }
             catch 
             {
@@ -217,7 +200,7 @@ namespace FRED.Pages
                     OpenErrorPanel();
                 }                                         
             }
-            //Response.Redirect("./UserControls");
+            Response.Redirect("./UserControls");
         }               
 
         public void OnPostSetSpeed(int speed)
@@ -322,100 +305,115 @@ namespace FRED.Pages
         }// onpost CamControl    
 
         public void OnPostSpeak(string text)
-        {            
-            if (Program.auxStream == null)
-            {
-                Program.Temp.SetError("Not connected to the server");
-                OpenErrorPanel();
-                //Response.Redirect("./UserControls");
-            }
-            else if (Program.Temp.GetError() == null)
-            {
-                try
-                {
-                    Byte[] speak = System.Text.Encoding.ASCII.GetBytes("TTS-" + text);
-                    Program.auxStream.Write(speak);
-                }
-                catch
-                {
-                    Program.Temp.SetError("Lost connection to the server");
-                    OpenErrorPanel();
-                    //Response.Redirect("./UserControls");
-                }
-            }
-            else // web cam is not working
-            {
-                OpenErrorPanel();
-                //Response.Redirect("./UserControls");
-            }            
-        }
-
-        public async void OnPostFredSees()
-        {            
-            if (Program.auxStream == null)
-            {
-                Program.Temp.SetError("Not connected to the server");
-                OpenErrorPanel();
-                //Response.Redirect("./UserControls");
-            }
-            else if (Program.Temp.GetError() == null)
-            {
-                try
-                {
-                    await Program.FredVision.GetVision("describe", null);
-                    Byte[] speak = System.Text.Encoding.ASCII.GetBytes("TTS-I see" + Program.FredVision.FredSees());
-                    Program.auxStream.Write(speak);
-                }
-                catch
-                {
-                    Program.Temp.SetError("Lost connection to the server");
-                    OpenErrorPanel();
-                    //Response.Redirect("./UserControls");
-                }
-            }
-            else // web cam is not working
-            {
-                OpenErrorPanel();
-                //Response.Redirect("./UserControls");
-            }                            
-        }
-
-        public async void OnPostFredReads()
-        {            
-            if (Program.auxStream == null)
-            {
-                Program.Temp.SetError("Not connected to the server");
-                OpenErrorPanel();
-                //Response.Redirect("./UserControls");
-            }
-            else if (Program.Temp.GetError() == null)
-            {
-                try
-                {
-                    await Program.FredVision.GetVision("read", null);
-                    Byte[] speak = System.Text.Encoding.ASCII.GetBytes("TTS-" + Program.FredVision.FredReads());
-                    Program.auxStream.Write(speak);
-                }
-                catch
-                {
-                    Program.Temp.SetError("Lost connection to the server");
-                    OpenErrorPanel();
-                    //Response.Redirect("./UserControls");
-                }
-            }
-            else // web cam is not working
-            {
-                OpenErrorPanel();
-                //Response.Redirect("./UserControls");
-            }            
-        }
-
-        public async void OnPostDetectFace()
         {
-            await Program.FredVision.GetVision("detect", null);
-            await Program.FredVision.DetectFace();
+            OnPostAuxConnect();
+            if (Program.auxStream == null)
+            {
+                Program.Temp.SetError("Not connected to the server");
+                OpenErrorPanel();
+                //Response.Redirect("./UserControls");
+            }
+            else if (Program.Temp.GetError() == null)
+            {
+                try
+                {
+                    Byte[] speak = System.Text.Encoding.ASCII.GetBytes("TTS*" + text);
+                    Program.auxStream.Write(speak);
+                }
+                catch
+                {
+                    Program.Temp.SetError("Lost connection to the server");
+                    OpenErrorPanel();
+                    //Response.Redirect("./UserControls");
+                }
+            }
+            else // web cam is not working
+            {
+                OpenErrorPanel();
+                //Response.Redirect("./UserControls");
+            }
+            Program.coreClient.Close();
+            Program.auxStream.Close();
+        }
+
+        public void OnPostFredSees()
+        {
+            OnPostAuxConnect();
+            string fredSees ="";
+            if (Program.auxStream == null)
+            {
+                Program.Temp.SetError("Not connected to the server");
+                OpenErrorPanel();                
+            }
+            else if (Program.Temp.GetError() == null)
+            {
+                try
+                {
+                    Program.FredVision.GetVision("describe", null).Wait();
+                    fredSees = Program.FredVision.FredSees();
+                    Byte[] speak = System.Text.Encoding.ASCII.GetBytes("TTS*I see" + fredSees);
+                    Program.auxStream.Write(speak);
+                    Program.Temp.SetDisplayText("I see " + fredSees);
+                    Program.Temp.SetTextPanel("block");                                                  
+                }
+                catch
+                {
+                    Program.Temp.SetError("Lost connection to the server");
+                    OpenErrorPanel();                    
+                }                
+            }
+            else // web cam is not working
+            {
+                OpenErrorPanel();                
+            }
+            Response.Redirect("./UserControls");
+            Program.coreClient.Close();
+            Program.auxStream.Close();
+        }
+
+        public void OnPostFredReads()
+        {
+            OnPostAuxConnect();
+            string fredReads;
+            if (Program.auxStream == null)
+            {
+                Program.Temp.SetError("Not connected to the server");
+                OpenErrorPanel();                
+            }
+            else if (Program.Temp.GetError() == null)
+            {
+                try
+                {                    
+                    Program.FredVision.GetVision("read", null).Wait();
+                    fredReads = Program.FredVision.FredReads();
+                    Byte[] speak = System.Text.Encoding.ASCII.GetBytes("TTS*" + fredReads);
+                    Program.auxStream.Write(speak);
+                    Program.Temp.SetDisplayText("I read - " + fredReads);
+                    Program.Temp.SetTextPanel("block");
+                }
+                catch
+                {
+                    Program.Temp.SetError("Lost connection to the server");
+                    OpenErrorPanel();                    
+                }
+            }
+            else // web cam is not working
+            {
+                OpenErrorPanel();                
+            }
+            Response.Redirect("./UserControls");
+            Program.coreClient.Close();
+            Program.auxStream.Close();
+        }
+
+        public void OnPostDetectFace()
+        {
+            OnPostAuxConnect();
+            Program.FredVision.GetVision("detect", null).Wait();
+            Program.FredVision.DetectFace().Wait();
             List<string> names = Program.FredVision.GetNames();
             Byte[] speak = null;
+            string displayGreeting;
 
             if (names.Count > 1)
             {
@@ -425,7 +423,8 @@ namespace FRED.Pages
                     sayNames += name + " and ";
                 }
                 sayNames = sayNames.Substring(0, sayNames.Length - 5);
-                speak = System.Text.Encoding.ASCII.GetBytes("TTS-Hello " + sayNames + "! How are you today?");                
+                speak = System.Text.Encoding.ASCII.GetBytes("TTS*Hello " + sayNames + "! How are you today?");
+                displayGreeting = "Hello " + sayNames + "! How are you today?";
             }
             else
             {
@@ -433,12 +432,14 @@ namespace FRED.Pages
                 {
                     case "no face":
                         {
-                            speak = System.Text.Encoding.ASCII.GetBytes("TTS-I dont see any faces to detect");                            
+                            speak = System.Text.Encoding.ASCII.GetBytes("TTS*I dont see any faces to detect");
+                            displayGreeting = "I dont see any faces to detect";
                             break;
                         }
                     case "dont recgonize":
                         {
-                            speak = System.Text.Encoding.ASCII.GetBytes("TTS-I dont recgonize any faces?");                            
+                            speak = System.Text.Encoding.ASCII.GetBytes("TTS*I dont recgonize any faces?");
+                            displayGreeting = "I dont recgonize any faces?";
                             break;
                         }
                     default:
@@ -446,7 +447,8 @@ namespace FRED.Pages
                             string[] greeting = { "How are you today?", "whats up?", "What, you never heard a toy car talk before?" };
                             Random randNum = new Random();
                             randNum.Next(3);
-                            speak = System.Text.Encoding.ASCII.GetBytes("TTS-Hello " + names[0] + "! How are you today?");                            
+                            speak = System.Text.Encoding.ASCII.GetBytes("TTS*Hello " + names[0] + "! How are you today?");
+                            displayGreeting = "Hello " + names[0] + "! How are you today?";
                             break;
                         }
                 }
@@ -458,27 +460,29 @@ namespace FRED.Pages
             if (Program.auxStream == null)
             {
                 Program.Temp.SetError("Not connected to the server");
-                OpenErrorPanel();
-                //Response.Redirect("./UserControls");
+                OpenErrorPanel();                
             }
             else if (Program.Temp.GetError() == null)
             {
                 try
                 {
                     Program.auxStream.Write(speak);
+                    Program.Temp.SetDisplayText(displayGreeting);
+                    Program.Temp.SetTextPanel("block");
                 }
                 catch
                 {
                     Program.Temp.SetError("Lost connection to the server");
-                    OpenErrorPanel();
-                    //Response.Redirect("./UserControls");
+                    OpenErrorPanel();                    
                 }
             }
             else // web cam is not working
             {
-                OpenErrorPanel();
-                //Response.Redirect("./UserControls");
-            }            
+                OpenErrorPanel();                
+            }
+            Response.Redirect("./UserControls");
+            Program.coreClient.Close();
+            Program.auxStream.Close();
         }
         
         public async void OnPostCreatePerson(string name, string desc)
@@ -500,7 +504,7 @@ namespace FRED.Pages
             Program.Temp.SetPersonID(person);
             display = "normal";
             displayFacePanel = "none";
-            //Response.Redirect("./UserControls");
+            Response.Redirect("./UserControls");
         }
         
         public async void OnPostTakePic()

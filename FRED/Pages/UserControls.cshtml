@@ -111,7 +111,7 @@
     </div>
     <div id="fredDetectFace">
         <form method="post" asp-page-handler="DetectFace">
-            <input class="ctrlBtn" type="image" onclick="DetectFace()" src="~/images/detect-face-fred-512.png" title="Detect Faces" />
+            <input class="ctrlBtn" type="image" onclick="" src="~/images/detect-face-fred-512.png" title="Detect Faces" />
         </form>
     </div>
     <div id="fredSees">
@@ -229,6 +229,14 @@
     </form>
 </div>
 
+<div id="popUpComputer" style="display: @Model.displayTextPanel;">
+    <img id="screen" src="~/images/popUpComputer.png" />
+    <div id="displayText">
+        @Model.displayText
+    </div>
+</div>
+
+
 <!-- ***** End of Hidden Panels ***** -->
 
 @{
@@ -288,69 +296,48 @@
     </div>
 </div>
 -->
-<!--
-<div id="connect">
-    <form method="post" asp-page-handler="Connect">
-        <input type="text" name="ipAddress" value="ip address" />
-        <input class="controlStop" type="submit" name="Connect" value="Connect" />
-    </form>
-</div>
 
-<div id="diconnect" style="margin: 20px">
-    <form method="post" asp-page-handler="Disconnect">
-        <input class="controlStop" type="submit" name="Disconnect" value="Disconnect" />
-    </form>
-</div>
-
-<div id="auxConnect" style="margin: 20px">
-    <form method="post" asp-page-handler="AuxConnect">
-        <input type="text" name="ipAddress" value="ip address" />
-        <input class="controlStop" type="submit" name="Disconnect" value="AuxConnect" />
-    </form>
-</div>
-
-<div id="auxDisconnect" style="margin: 20px">
-    <form method="post" asp-page-handler="AuxDisconnect">
-        <input class="controlStop" type="submit" name="Disconnect" value="AuxDisconnect" />
-    </form>
-</div>
-
-<div id="controlPanelss" style="margin: 20px">
-    <form method="post" asp-page-handler="OpenControlPanel">
-        <input class="controlStop" type="submit" name="" value="Control Panel" />
-    </form>
-</div>-->
-<!--
-<div id="controlPanelss" style="margin: 20px">
-    <form method="post" asp-page-handler="OpenVisionPanel">
-        <input class="controlStop" type="submit" name="" value="Vision Panel" />
-    </form>
-</div>
-
-<div id="faceList" style="margin: 20px">
-    <form method="post" asp-page-handler="OpenAddFacePanel">
-        <input class="controlStop" onclick="" type="submit" value="Get Face list" />
-    </form>
-</div>
-
-<div id="test" style="margin: 20px">
-    <form method="post" asp-page-handler="Test">
-        <input class="controlStop" type="submit" value="Test KB" />
-    </form>
-</div>
--->
 <div id="toggleDiv">
     <form method="post" asp-page-handler="OpenControlPanel">
-        <input class="toggleBtn" type="image" src="~/images/toggle-btn-off.png" />
-    </form>
-    <form method="post" asp-page-handler="OpenAddFacePanel">
-        <input class="toggleBtn" type="image" src="~/images/toggle-btn-off.png" />
+        @if (Model.displayControlPanel == "none")
+        {
+            <input class="toggleBtn" type="image" src="~/images/toggle-control-panel-off.png" />
+        }
+        else
+        {
+            <input class="toggleBtn" type="image" src="~/images/toggle-control-panel-on.png" />
+        }
     </form>
     <form method="post" asp-page-handler="OpenVisionPanel">
-        <input class="toggleBtn" type="image" src="~/images/toggle-btn-off.png" />
+        @if (Model.displayVisionPanel == "none")
+        {
+            <input class="toggleBtn" type="image" src="~/images/toggle-vision-panel-off.png" />
+        }
+        else
+        {
+            <input class="toggleBtn" type="image" src="~/images/toggle-vision-panel-on.png" />
+        }
+    </form>
+    <form method="post" asp-page-handler="OpenAddFacePanel">
+        @if (Model.displayFacePanel == "none")
+        {
+            <input class="toggleBtn" type="image" src="~/images/toggle-addFace-panel-off.png" />
+        }
+        else
+        {
+            <input class="toggleBtn" type="image" src="~/images/toggle-addFace-panel-on.png" />
+        }
     </form>
     <form method="post" asp-page-handler="Test">
-        <input class="toggleBtn" type="image" src="~/images/toggle-btn-off.png" />
+        @if (Model.displayFacePanel == "none")
+        {
+            <input class="toggleBtn" type="image" src="~/images/toggle-voice-panel-off.png" />
+        }
+        else
+        {
+            <input class="toggleBtn" type="image" src="~/images/toggle-voice-panel-on.png" />
+        }
+        
     </form>
 </div>
 

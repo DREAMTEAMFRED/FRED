@@ -17,6 +17,8 @@ namespace FRED.Utility
         public string displayErrorPanel = "none";
         public string lightStatus = "off";
         public string error = null;
+        public string displayTextPanel = "none";
+        public string displayText = "";
 
         public void SetError(string error)
         {
@@ -36,6 +38,26 @@ namespace FRED.Utility
         public string GetLightStatus()
         {
             return lightStatus;
+        }
+
+        public void SetDisplayText(string text)
+        {
+            displayText = text;
+        }
+
+        public string GetDisplayText()
+        {
+            return displayText;
+        }
+
+        public void SetTextPanel(string display)
+        {
+            displayTextPanel = display;
+        }
+
+        public string GetTextPanelStatus()
+        {
+            return displayTextPanel;
         }
 
         public void SetFacePanel(string display)
@@ -107,19 +129,7 @@ namespace FRED.Utility
         {
             return mySpeed;
         }
-
-        /*
-        public void SetIP(string ip)
-        {
-            serverIP = ip;
-        }
-
-        public string GetIP()
-        {
-            return serverIP;
-        }
-        */
-
+                
         private List<string> nams = new List<string>();
         private List<string> descriptions = new List<string>();
         private List<int> faceCounts = new List<int>();
