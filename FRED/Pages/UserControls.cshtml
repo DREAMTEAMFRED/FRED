@@ -173,9 +173,11 @@
             }
         </div>
         <div id="facePanelBottomRight">
+            <!--
             <a href="./UserControls">
                 <i onclick="Refresh()" class="fas fa-sync-alt"></i>
             </a>
+            -->
         </div>
     </div>
 </div>
@@ -203,7 +205,7 @@
     </div>
 </div>
 
-<div id="takePicPanel" style="display: @Model.display;">
+<div id="takePicPanel" style="display: @Model.displayTakePicPanel;">
     <div id="instructions">
         <p>
             Look directly into the camera and press <b>Camera Button</b> to take your first pic.
@@ -214,12 +216,15 @@
             <input class="cameraBtn" type="image" src="~/images/camera-btn.png" />
         </form>
     </div>
-    <div id="takePicPanelBottom">
+    <div id="takePicPanelBottomLeft">
+        @Program.Temp.GetPicStatus()
+    </div>
+    <div id="takePicPanelBottomRight">
         <i class="far fa-times-circle closeWindow" onclick="CloseWindow()"></i>
         <form method="post" asp-page-handler="CloseWindow" id="closeWindow"></form>
     </div>
 </div>
-
+    
 <div id="errorPanel" style="display: @Model.displayErrorPanel;">
     <img src="~/images/error-icon-white.png" />
     <p>@Model.error</p>
@@ -337,7 +342,6 @@
         {
             <input class="toggleBtn" type="image" src="~/images/toggle-voice-panel-on.png" />
         }
-        
     </form>
 </div>
 

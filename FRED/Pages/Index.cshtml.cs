@@ -42,7 +42,7 @@ namespace FRED.Pages
                 {
                     Program.coreClient = new TcpClient();
                     Program.coreClient.Connect(server, port);
-                    Program.auxStream = Program.coreClient.GetStream();
+                    //Program.auxStream = Program.coreClient.GetStream();
                 }
                 catch
                 {
@@ -50,6 +50,7 @@ namespace FRED.Pages
                     Program.Temp.SetError("Cant connect to server");
                 }
                 Response.Redirect("./UserControls");
+                Program.coreClient.Close();
             }
             else
             {
@@ -57,8 +58,7 @@ namespace FRED.Pages
                 Program.Temp.SetErrorPanel("block");
                 Program.Temp.SetError("Cant connect to server");
                 Response.Redirect("./UserControls");
-            }
-            Program.coreClient.Close();
+            }            
         }
     }
 }

@@ -10,18 +10,17 @@ namespace FRED.Pages
 {
     public class UserControlsModel : PageModel
     {        
-        public string serverIP = Program.Controller.GetIP();                
-        public string display = "none";
+        public string serverIP = Program.Controller.GetIP();                      
         public string error = Program.Temp.GetError();
         public string displayErrorPanel = Program.Temp.GetErrorPanelStatus();
         public string displayControlPanel = Program.Temp.GetContorlPanelStatus();
         public string displayVisionPanel = Program.Temp.GetVisionPanelStatus();
         public string displayFacePanel = Program.Temp.GetFacePanelStatus();
+        public string displayTakePicPanel = Program.Temp.GetTakePicPanelStatus();
         public string light = Program.Temp.GetLightStatus();
         public int mySpeed = Program.Temp.GetSpeed();
         public string displayTextPanel = Program.Temp.GetTextPanelStatus();
         public string displayText = Program.Temp.GetDisplayText();
-
 
         public void OnGet()
         {            
@@ -33,13 +32,16 @@ namespace FRED.Pages
             Program.Temp.SetErrorPanel("block");
             Program.Temp.SetFacePanel("none");
             Program.Temp.SetVisionPanel("none");
-            Program.Temp.SetControlPanel("none");
-            //Response.Redirect("./UserControls");
+            Program.Temp.SetControlPanel("none");            
         }
 
-        public void CloseWindow()
+        public void OnPostCloseWindow()
         {
-            display = "none";
+            Program.Temp.SetTakePicPanel("none");
+            Program.Temp.SetPicStatus("");
+            Program.FredVision.GetFacesList().Wait();
+            Program.Temp.SetFacePanel("block");
+            Response.Redirect("./UserControls");
         }
 
         public void OnPostOpenAddFacePanel()
@@ -310,8 +312,7 @@ namespace FRED.Pages
             if (Program.auxStream == null)
             {
                 Program.Temp.SetError("Not connected to the server");
-                OpenErrorPanel();
-                //Response.Redirect("./UserControls");
+                OpenErrorPanel();                
             }
             else if (Program.Temp.GetError() == null)
             {
@@ -319,21 +320,19 @@ namespace FRED.Pages
                 {
                     Byte[] speak = System.Text.Encoding.ASCII.GetBytes("TTS*" + text);
                     Program.auxStream.Write(speak);
+                    Program.coreClient.Close();
+                    Program.auxStream.Close();
                 }
                 catch
                 {
                     Program.Temp.SetError("Lost connection to the server");
-                    OpenErrorPanel();
-                    //Response.Redirect("./UserControls");
+                    OpenErrorPanel();                    
                 }
             }
             else // web cam is not working
             {
-                OpenErrorPanel();
-                //Response.Redirect("./UserControls");
-            }
-            Program.coreClient.Close();
-            Program.auxStream.Close();
+                OpenErrorPanel();                
+            }            
         }
 
         public void OnPostFredSees()
@@ -354,7 +353,9 @@ namespace FRED.Pages
                     Byte[] speak = System.Text.Encoding.ASCII.GetBytes("TTS*I see" + fredSees);
                     Program.auxStream.Write(speak);
                     Program.Temp.SetDisplayText("I see " + fredSees);
-                    Program.Temp.SetTextPanel("block");                                                  
+                    Program.Temp.SetTextPanel("block");
+                    Program.coreClient.Close();
+                    Program.auxStream.Close();
                 }
                 catch
                 {
@@ -366,9 +367,7 @@ namespace FRED.Pages
             {
                 OpenErrorPanel();                
             }
-            Response.Redirect("./UserControls");
-            Program.coreClient.Close();
-            Program.auxStream.Close();
+            Response.Redirect("./UserControls");            
         }
 
         public void OnPostFredReads()
@@ -390,6 +389,8 @@ namespace FRED.Pages
                     Program.auxStream.Write(speak);
                     Program.Temp.SetDisplayText("I read - " + fredReads);
                     Program.Temp.SetTextPanel("block");
+                    Program.coreClient.Close();
+                    Program.auxStream.Close();
                 }
                 catch
                 {
@@ -401,9 +402,7 @@ namespace FRED.Pages
             {
                 OpenErrorPanel();                
             }
-            Response.Redirect("./UserControls");
-            Program.coreClient.Close();
-            Program.auxStream.Close();
+            Response.Redirect("./UserControls");            
         }
 
         public void OnPostDetectFace()
@@ -469,6 +468,8 @@ namespace FRED.Pages
                     Program.auxStream.Write(speak);
                     Program.Temp.SetDisplayText(displayGreeting);
                     Program.Temp.SetTextPanel("block");
+                    Program.coreClient.Close();
+                    Program.auxStream.Close();
                 }
                 catch
                 {
@@ -480,37 +481,35 @@ namespace FRED.Pages
             {
                 OpenErrorPanel();                
             }
-            Response.Redirect("./UserControls");
-            Program.coreClient.Close();
-            Program.auxStream.Close();
+            Response.Redirect("./UserControls");            
         }
         
-        public async void OnPostCreatePerson(string name, string desc)
+        public void OnPostCreatePerson(string name, string desc)
         {
-            await Program.FredVision.CreatePerson(name, desc);            
-            
+            Program.FredVision.CreatePerson(name, desc).Wait();
+            Program.FredVision.GetFacesList().Wait();
             Response.Redirect("./UserControls");
         }
         
-        public async void OnPostDeletePerson(string personID)
+        public void OnPostDeletePerson(string personID)
         {            
-            await Program.FredVision.DeletePerson(personID);            
-                     
+            Program.FredVision.DeletePerson(personID).Wait();
+            Program.FredVision.GetFacesList().Wait();
             Response.Redirect("./UserControls");
         }
                 
         public void OnPostAddFace(string person)
         {
             Program.Temp.SetPersonID(person);
-            display = "normal";
-            displayFacePanel = "none";
+            Program.Temp.SetTakePicPanel("normal");            
+            Program.Temp.SetFacePanel("none");
             Response.Redirect("./UserControls");
         }
         
-        public async void OnPostTakePic()
+        public void OnPostTakePic()
         {
-            await Program.FredVision.GetVision("addFace", Program.Temp.GetPersonID());
-            await Program.FredVision.TrainFace();                        
+            Program.FredVision.GetVision("addFace", Program.Temp.GetPersonID()).Wait();            
+            Program.FredVision.TrainFace().Wait();
             Response.Redirect("./UserControls");
         }        
 

@@ -7,18 +7,19 @@ namespace FRED.Utility
 {
     public class Temp
     {
-        private int mySpeed = 50;
-        //private string serverIP = "10.10.10.10";
+        private int mySpeed = 50;        
         private string personID = "";
         private string trainingStatus = "";
         public string displayControlPanel = "none";
         public string displayVisionPanel = "none";
         public string displayFacePanel = "none";
         public string displayErrorPanel = "none";
+        public string displayTakePicPanel = "none";
         public string lightStatus = "off";
         public string error = null;
         public string displayTextPanel = "none";
         public string displayText = "";
+        public string picStatus = "";
 
         public void SetError(string error)
         {
@@ -28,6 +29,16 @@ namespace FRED.Utility
         public string GetError()
         {
             return error;
+        }
+
+        public void SetPicStatus(string status)
+        {
+            picStatus = status;
+        }
+
+        public string GetPicStatus()
+        {
+            return picStatus;
         }
 
         public void SetLight(string status)
@@ -93,6 +104,16 @@ namespace FRED.Utility
         public string GetErrorPanelStatus()
         {
             return displayErrorPanel;
+        }
+
+        public void SetTakePicPanel(string display)
+        {
+            displayTakePicPanel = display;
+        }
+
+        public string GetTakePicPanelStatus()
+        {
+            return displayTakePicPanel;
         }
 
         public void SetErrorPanel(string display)

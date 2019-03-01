@@ -20,8 +20,7 @@ namespace FRED.Utility
 
         private string compVisonKey = Environment.GetEnvironmentVariable("AzureCompVision", EnvironmentVariableTarget.User);
         private string faceAiKey = Environment.GetEnvironmentVariable("AzureFaceAi", EnvironmentVariableTarget.User);
-
-        private string badPic;
+                
         private byte[] img = null;
 
         private void SetData(string data) { this.data = data; }
@@ -116,22 +115,22 @@ namespace FRED.Utility
             {
                 data = await response.Content.ReadAsStringAsync();
                 SetData(data);
+                if (type == "addFace")
+                    Program.Temp.SetPicStatus("Good Pic! Try another one!");
             }
             else
             {
                 data = null;
                 if (type == "addFace")
-                    badPic = "The picture was bad please take another one";
-            }
-            
+                    Program.Temp.SetPicStatus("Bad Pic! Try again.");
+            }            
         }
 
         public string FredSees()
         {
             string fredSees = "";
             if (data != null)
-            {
-                
+            {                
                 JsonObject jsonDoc = (JsonObject)JsonValue.Parse(data);
                 JsonArray jsonArray = (JsonArray)jsonDoc["description"]["captions"];
 
