@@ -1,14 +1,36 @@
 ﻿@page
 @model IndexModel
 
+<header>
+    <img src="~/images/fred-title.png" />
+</header>
 
-
-<h1 class="white">Home Page</h1>
-
-<div id="tempLogin">
-    <form method="post" asp-page-handler="Connect">
-        <input class="controlStop" type="submit" value="User Controls" />
-    </form>
+<div id="carContainer">
+    <img id="robotCar" src="~/images/robot-car.png" />
+    <img id="frontWheel" src="~/images/robot-front-wheel.png" />
+    <img id="rearWheel" src="~/images/robot-rear-wheel.png" />
 </div>
-<!--
-<a href="./UserControls"><h2>User control page</h2></a>-->
+
+<div id="loginTitle">
+    <div id="loginError">
+        @Program.Temp.GetLoginError()
+    </div>
+    <div id="userPass">
+        <span id="username">Username:</span>
+        <span id="password">Password:</span>
+    </div>    
+    <div id="login">
+        <form method="post" asp-page-handler="Login">
+            <input class="login" type="text" name="username" value="username" />
+            <input class="login" type="password" name="password" value="password" />
+            <input class="loginButton" type="submit" name="Login" value="Login" />
+        </form>
+    </div>
+    <div id="register">
+        Haven't registered yet? <a href="./AddUser" title="Create Account">Create an Account.</a>
+    </div>
+</div>
+
+<footer>
+    <span>&copy;&nbsp;Wes Kellar 2019 TriOS Student</span>
+</footer>

@@ -21,11 +21,38 @@ namespace FRED.Pages
             Program.Controller.CheckID(username, password);
             if(Program.Controller.IsVerified)
             {
+                Program.Temp.SetError(null);
+                Program.Controller.GetDeviceList();
+                if (Program.Controller.GetDeviceStatus() == "active")
+                {
+                    string server = Program.Controller.GetIP();
+                    int port = 13000;
+
+                    try
+                    {
+                        Program.coreClient = new TcpClient();
+                        Program.coreClient.Connect(server, port);
+                        Program.coreClient.Close();
+                    }
+                    catch
+                    {
+                        Program.Temp.SetErrorPanel("block");
+                        Program.Temp.SetError("Cant connect to server");
+                    }
+                }
+                else
+                {
+                    Program.Temp.SetErrorPanel("block");
+                    Program.Temp.SetError("Cant connect to server");
+                    Response.Redirect("./UserControls");
+                }
+                Program.Temp.SetLoginError("");
                 Response.Redirect("./UserControls");
             }
             else
             {
-                Response.Redirect("./Error");
+                Program.Temp.SetLoginError("Incorrect Username and/or Password!");
+                Response.Redirect("./Index");
             }            
         }
 
@@ -42,19 +69,17 @@ namespace FRED.Pages
                 {
                     Program.coreClient = new TcpClient();
                     Program.coreClient.Connect(server, port);
-                    //Program.auxStream = Program.coreClient.GetStream();
+                    Program.coreClient.Close();
                 }
                 catch
                 {
-                    Program.Temp.SetErrorPanel("none"); // make sure its set to block
+                    Program.Temp.SetErrorPanel("block"); 
                     Program.Temp.SetError("Cant connect to server");
-                }
-                Response.Redirect("./UserControls");
-                Program.coreClient.Close();
+                }               
+                
             }
             else
-            {
-                // put error message to restart fred
+            {                
                 Program.Temp.SetErrorPanel("block");
                 Program.Temp.SetError("Cant connect to server");
                 Response.Redirect("./UserControls");

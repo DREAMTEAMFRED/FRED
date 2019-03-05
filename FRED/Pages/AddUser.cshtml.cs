@@ -15,65 +15,69 @@ namespace FRED.Pages
 
         }
 
-        public void OnPostNewUser(string username, string password)
+        public void OnPostNewUser(string username, string password, string confirmPass)
         {
-            string hashPassword = Program.Password.Hash(password);
-
-            using (SqlConnection myConn = new SqlConnection(Program.cs))
+            if (password == confirmPass)
             {
-                SqlCommand UserExists = new SqlCommand();
-                UserExists.Connection = myConn;
-                myConn.Open();
-                UserExists.Parameters.AddWithValue("@username", username);
-                UserExists.CommandText = ("[spUserExists]");
-                UserExists.CommandType = System.Data.CommandType.StoredProcedure;
-                var exists = UserExists.ExecuteScalar();
+                string hashPassword = Program.Password.Hash(password);
 
-                if (username == Convert.ToString(exists))
+                using (SqlConnection myConn = new SqlConnection(Program.cs))
                 {
-                    // username exists
-                    Program.Controller.UserID = 0;
-                    Response.Redirect("./Error");
-                }
-                else
-                {
-                    // username does not exists
-                    int userID = 0;
-                    SqlCommand addUser = new SqlCommand();
-                    addUser.Connection = myConn;
+                    SqlCommand UserExists = new SqlCommand();
+                    UserExists.Connection = myConn;
+                    myConn.Open();
+                    UserExists.Parameters.AddWithValue("@username", username);
+                    UserExists.CommandText = ("[spUserExists]");
+                    UserExists.CommandType = System.Data.CommandType.StoredProcedure;
+                    var exists = UserExists.ExecuteScalar();
 
-                    addUser.Parameters.AddWithValue("@username", username);
-                    addUser.Parameters.AddWithValue("@password", hashPassword);
-
-                    addUser.CommandText = ("[spAddUser]");
-                    addUser.CommandType = System.Data.CommandType.StoredProcedure;
-
-                    var result = addUser.ExecuteScalar();
-                    if (result != null)
+                    if (username == Convert.ToString(exists))
                     {
-                        userID = Convert.ToInt16(result);
-                        Program.Controller.UserID = userID;
+                        Program.Temp.SetCreateError("Username Already Exsits!");                        
                     }
+                    else
+                    {
+                        // username does not exists
+                        int userID = 0;
+                        SqlCommand addUser = new SqlCommand();
+                        addUser.Connection = myConn;
 
-                    // add Log table
-                    SqlCommand addLog = new SqlCommand();
-                    addLog.Connection = myConn;
+                        addUser.Parameters.AddWithValue("@username", username);
+                        addUser.Parameters.AddWithValue("@password", hashPassword);
 
-                    addLog.Parameters.AddWithValue("@UserID", userID);
+                        addUser.CommandText = ("[spAddUser]");
+                        addUser.CommandType = System.Data.CommandType.StoredProcedure;
 
-                    addLog.CommandText = ("[spAddLog]");
-                    addLog.CommandType = System.Data.CommandType.StoredProcedure;
+                        var result = addUser.ExecuteScalar();
+                        if (result != null)
+                        {
+                            userID = Convert.ToInt16(result);
+                            Program.Controller.UserID = userID;
+                        }
 
-                    addLog.ExecuteNonQuery();
+                        // add Log table
+                        SqlCommand addLog = new SqlCommand();
+                        addLog.Connection = myConn;
 
-                    myConn.Close();
-                    Response.Redirect("./UserControls");
-                }
+                        addLog.Parameters.AddWithValue("@UserID", userID);
 
+                        addLog.CommandText = ("[spAddLog]");
+                        addLog.CommandType = System.Data.CommandType.StoredProcedure;
+
+                        addLog.ExecuteNonQuery();
+
+                        myConn.Close();
+                        Program.Temp.SetCreateError("");
+                        Response.Redirect("./UserControls");
+                    }
+                }//Using
             }
-            //OnPostLogin(username, password);
-
-        }
+            else
+            {
+                Program.Temp.SetCreateError("Passwords do not match!");
+            }
+            
+        }//OnPostLogin
 
         public void OnPostLogin(string username, string password)
         {

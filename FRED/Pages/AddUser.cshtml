@@ -4,17 +4,35 @@
     ViewData["Title"] = "AddUser";
 }
 
-<div id="userGrid">
-    <header>
-        <h1 class="white">Add User Page</h1>
-    </header>
-    <div id="newUser">
-        <form id="newUserForm" method="post" asp-page-handler="NewUser">
-            <input type="text" name="username" placeholder="email address" required />
-            <input type="password" name="password" placeholder="password" required />
-            <input type="submit" value="Create Account" />
-        </form>
-    </div>
+<header>
+    <a href="./Index" title="Go to Home Page"><img src="~/images/fred-logo.png" /></a>   
+</header>
+
+<div id="newUserForm">
+    <div id="createError">@Program.Temp.GetCreateError()</div>
+    <form method="post" asp-page-handler="NewUser">
+        <table id="addPersonTable">
+            <tr>
+                <td>Enter Username:</td>
+                <td><input type="text" name="username" required /></td>
+            </tr>
+            <tr>
+                <td>Enter Password:</td>
+                <td><input type="password" name="password" required /></td>
+            </tr>
+            <tr>
+                <td>Confirm Password:</td>
+                <td><input type="password" name="confirmPass" required /></td>
+            </tr>
+            <tr>
+                <td>Device ID:</td>
+                <td><input type="text" name="id" /></td>
+            </tr>
+        </table>
+        <br />
+        <input id="createBtn" type="submit" value="Create Account" />
+    </form>
 </div>
+    
 
 

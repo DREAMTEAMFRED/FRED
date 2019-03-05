@@ -4,6 +4,12 @@
     ViewData["Title"] = "UserControls";
 }
 
+<div id="logout">
+    <form method="post" asp-page-handler="Logout">           
+        <input class="loginButton" type="submit" name="Logout" value="Logout" />
+    </form>
+</div>
+
 <!-- ***** Hidden Panels ***** -->
 
 <div id="controlPanel" style="display: @Model.displayControlPanel;">
