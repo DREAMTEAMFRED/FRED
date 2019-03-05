@@ -338,7 +338,7 @@ body {
     position: fixed;
     z-index: 19;
     width: 780px;
-    height: 300px;
+    min-height: 250px;
     margin-left: calc(50% - 390px);
     padding: 10px 10px 10px 20px;
     background: rgba(0, 0, 0, .8);
@@ -349,12 +349,12 @@ body {
     color: #fff;    
 
     display: grid;          
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     grid-auto-rows: minmax(auto, auto);
     grid-template-areas: 
-        "  .   .  clo"
-        " spk spk spk"
-        " fac see rea";
+        "  .  .  .  .  clo"
+        "spk spk spk spk spk"
+        "fac qna see enr rea";
 }
     #visionPanel input {        
         align-self: center;        
@@ -369,6 +369,16 @@ body {
         display: flex;
         justify-content: center;
     }
+    #fredqna {
+        grid-area: qna;
+        display: flex;
+        justify-content: center;
+    }
+    #fredenroll {
+        grid-area: enr;
+        display: flex;
+        justify-content: center;
+    }
     #fredReads {
         grid-area: rea;
         display: flex;
@@ -378,8 +388,7 @@ body {
         grid-area: spk;
         display: flex;
         justify-content: center;
-        font-size: 1.4em;
-        
+        font-size: 1.4em;    
     }
         #speakInput {
             width: 350px;
@@ -414,6 +423,45 @@ body {
         width: 80px;
     }
 
+#voicePanel 
+{
+    position: fixed;
+    z-index: 19;
+    width: 780px;
+    min-height: 120px;
+    margin-left: calc(50% - 390px);
+    padding: 10px 10px 10px 20px;
+    background: rgba(0, 0, 0, .8);
+    border: 1px solid #000;
+    border-radius: 12px;
+    box-shadow: 0 4px 11px #999;
+    top: 580px;
+    color: #fff;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-auto-rows: minmax(auto, auto);
+    grid-template-areas:
+        " . . . . clo" 
+        "rec ask plb . ." 
+}
+    #fredRec 
+    {
+        grid-area: rec;
+        display: flex;
+        justify-content: center;
+    }
+    #askFred 
+    {
+        grid-area: ask;
+        display: flex;
+        justify-content: center;
+    }
+    #playBack 
+    {
+        grid-area: plb;
+        display: flex;
+        justify-content: center;
+    }
     
 #addFacePanel {    
     position: fixed;
@@ -700,4 +748,142 @@ footer {
     .carousel-caption {
         display: none;
     }
+}
+
+/*Mark's CSS*/
+#enroll
+{
+    border-top-right-radius: 9px;
+    z-index: 10;
+    background-color: black;
+    min-height: 250px;
+    width: 350px;
+    left: calc(50% - 175px);
+    opacity: 0.85;
+}
+
+.divEffects
+{
+    text-align: center; 
+    position: absolute;
+    margin-top: 200px;
+}
+
+#close 
+{
+    position: absolute;
+    right: -10px;
+    top: -9px;
+    cursor: pointer;
+    color: black;
+    border-radius: 50%;
+}
+
+i#close:hover
+{
+    color: red;
+    background-color: black;
+}
+
+i.deleteQnA:hover
+{
+    color: red;
+    background-color: black;
+}
+
+#name
+{
+    margin-top: 40px;
+}
+
+#updKB
+{
+    border-top-right-radius: 9px;
+    z-index: 100;
+    background-color: black;
+    min-height: 100px;
+    width: 480px;
+    left: calc(50% - 240px);
+    opacity: 0.85;
+    padding-right: 10px;
+}
+
+#submitQnA
+{
+    margin-bottom: 2px; 
+    margin-top: 7%;
+}
+
+#addQnA
+{
+    position: absolute; 
+    bottom: 2px; 
+    right: 2px;
+}
+#enrolledVoices
+{
+    border-top-right-radius: 9px;
+    z-index: 11;
+    background-color: black;
+    min-height: 10px;
+    width: 500px;
+    left: calc(50% - 250px);
+    opacity: 0.85;
+    color: white;
+}
+
+table
+{
+    width: 100%; 
+    border-collapse: collapse;
+}
+    td, th 
+    {
+        border: 1px solid none;
+        text-align: center;
+        padding-bottom: 5px;
+    }
+    th
+    {
+        font-weight: bolder;
+    }
+
+.edit 
+{
+    background-color: blue;
+    border-radius: 10px;
+}
+
+.delete
+{
+    background-color: red; 
+    border-radius: 10px;
+}
+
+#recordAud
+{
+    z-index: 11;
+    background-color: white;
+    height: 100px;
+    padding-top: 15px;
+    width: 200px;
+    left: calc(50% - 100px);
+    opacity: 0.85;
+}
+
+#errMsg
+{
+    position: absolute; 
+    top: 250px;
+    z-index: 13; 
+    background-color: red; 
+    border-radius: 5px;
+    height: 50px; 
+    padding-top: 15px; 
+    width: 200px; 
+    left: calc(50% - 100px);
+}
+img
+{
+    width: 50%
 }

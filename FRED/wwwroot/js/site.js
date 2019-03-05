@@ -2,6 +2,14 @@
 
 let faceIsOpen = false;
 
+/*****Mark's js variables*****/
+let idNum = 0;
+let idVar = 0;
+let idArray = new Array();
+let errorMsg = null;
+let enrollTexts;
+/********************** */
+
 function ToggleFacePanel() {    
     if (!faceIsOpen) { // open panel        
         $('#addFacePanel').animate({
@@ -80,7 +88,26 @@ window.onload = function () {
         $('#screen').fadeOut(2000)  
         $('#displayText').fadeOut(2000)
     }, 3000);
+
+
+    /*******************************Mark's***********************************/
+    if ($("input[name=profileName]").val() != "") {
+        $("input[name=profileName]").prop("disabled", true);
+    }
+
+    if ($("input[name=profileName]").prop("disabled") && document.getElementById("enrollBtn1").disabled && document.getElementById("enrollBtn2").disabled) {
+        document.getElementById("enrollBtn2").disabled = false;
+    }
+    else {
+        document.getElementById("enrollBtn2").disabled = true;
+    }
+
+    if ($("input[name=profileName]").prop("disabled") && document.getElementById("enrollBtn1").disabled && document.getElementById("enrollBtn2").disabled) {
+        document.getElementById("confEnroll").disabled = false;
+    }
+
     
+    /************************************************************************/
 }
 
 function Refresh() {
@@ -234,3 +261,222 @@ slider.oninput = function () {
 slider.onchange = function () {
     this.form.submit();
 }
+
+/*Mark's js*/
+
+function ShowWindow(value) {
+    event.preventDefault(); // stop submission of form
+    if (value == "enroll") {
+        document.getElementById(value).style.display = "block";
+    }
+    else if (value == "updKB") {
+        document.getElementById(value).style.display = "block";
+    }
+    if (idNum == 0) // add question and answer field if none is in there
+    {
+        AddQnA();
+    }
+}
+
+function AddQnA()
+{
+    idNum++;
+
+    if (idNum <= 10)
+    {
+        idVar = idNum;
+        while (idArray.includes("" + idVar))
+        {
+            idVar++;
+        }
+
+        idArray.push("" + idVar);
+        let quest = document.createElement("input");
+        let answer = document.createElement("input");
+        let remove = document.createElement("i");
+
+        remove.id = idVar;
+        quest.id = "question" + idVar;
+        answer.id = "answer" + idVar;
+
+        remove.className = "fas fa-times-circle fa-lg deleteQnA";
+
+        remove.style = "float: right; margin-top: 22px; cursor: pointer";
+        quest.style = "margin-top: 15px; margin-left: 10px; margin-right: 2px";
+        answer.style = "margin-top: 15px; margin-left: 2px";
+
+        quest.placeholder = "enter question";
+        answer.placeholder = "enter answer";
+
+        let submitQnA = document.getElementById("submitQnA");
+        let addQnA = document.getElementById("addQnA");
+        let brIn = document.getElementsByClassName("brIn");
+        let br = document.createElement("br");
+        br.className = "brIn";
+
+        document.getElementById("QnAForm").removeChild(submitQnA);
+        document.getElementById("QnAForm").removeChild(addQnA);
+        document.getElementById("QnAForm").removeChild(brIn[0]);
+
+        document.getElementById("QnAForm").appendChild(quest);
+        document.getElementById("QnAForm").appendChild(answer);
+        document.getElementById("QnAForm").appendChild(remove);
+
+        document.getElementById("QnAForm").appendChild(br)
+        document.getElementById("QnAForm").appendChild(br)
+
+        document.getElementById("QnAForm").appendChild(submitQnA);
+        document.getElementById("QnAForm").appendChild(addQnA);
+
+        document.getElementById(remove.id).setAttribute("onclick", "DeleteQnA('" + idVar + "');");
+    }
+    else
+    {
+        idNum--;
+    }
+}
+
+function DeleteQnA(elem) {
+    if (idNum > 1) {
+        document.getElementById("QnAForm").removeChild(document.getElementById("question" + elem));
+        document.getElementById("QnAForm").removeChild(document.getElementById("answer" + elem));
+        document.getElementById("QnAForm").removeChild(document.getElementById(elem));
+        idArray.splice(idArray.indexOf(elem), 1);
+        idNum--;
+    }
+}
+
+function CloseWindow(id)
+{
+    document.getElementById(id).style.display = "none";
+    if (id == "enroll") {
+        if (document.getElementById("enrollBtn1").innerHTML != "Voice 1") // only post if there's actually been a recording
+        {
+            $("#cancE").click();
+        }
+        else {
+            document.getElementById("name").value = "";
+            document.getElementById("desc").value = "";
+            document.getElementById("desc").disabled = true;
+            document.getElementById("enrollBtn1").disabled = true;
+        }
+    }
+}
+
+
+function Record()// ensures the audio gif displays as recording starts
+{
+    document.getElementById("recordAud").style.display = "block";
+}
+
+function StopRecording()
+{
+    document.getElementById("recordAud").style.display = "none";
+}
+
+function RecVoice(BtnId)
+{
+    if (BtnId == "enrollBtn1") {
+        enrollTexts += ":" + $("input[name=profileDesc]").val();
+        $("#subText").val(enrollTexts); //assign val in in enrollTexts to hidden text input
+    }
+    document.getElementById("recordAud").style.display = "block";
+    $('#recVoice').submit();
+}
+
+$("input[name=profileName]").focusin(function () {
+    $("input[name=profileName]").change(function () {
+        if ($("input[name=profileName]").val() != "") {
+            enrollTexts = $("input[name=profileName]").val(); // stores val in profile name away
+            document.getElementById("desc").disabled = false;
+        }
+        else {
+            document.getElementById("desc").disabled = true;
+        }
+    });
+});
+
+$("input[name=profileDesc").focusin(function () {
+    $("input[name=profileDesc]").change(function () {
+        if ($("input[name=profileDesc]").val() != "") {
+            document.getElementById("enrollBtn1").disabled = false;
+        }
+        else {
+            document.getElementById("enrollBtn1").disabled = true;
+        }
+    });
+});
+
+function ShowEnrollments()
+{
+    document.getElementById("enrolledVoices").style.display = "table";
+}
+
+function UpdateKB()
+{
+    let qNa = "";
+    errorMsg = null;
+    for (i = 0; i < idNum; i++) {
+        qValue = document.getElementById("question" + idArray[i]).value;
+        aValue = document.getElementById("answer" + idArray[i]).value;
+
+        if ((qValue != "" && aValue == "") || (qValue == "" && aValue != "") || (qValue == "" && aValue == "")) {
+            document.getElementById("errMsg").innerHTML = "";
+            if (errorMsg != null)
+                document.getElementById("errMsg").removeChild(errorMsg);
+
+            document.getElementById("errMsg").style.display = "block";
+
+            errorMsg = document.createElement("p");
+            document.getElementById("errMsg").style.height = "65px";
+            errorMsg.innerHTML = "Please enter question and answer pair!";
+
+            document.getElementById("errMsg").appendChild(errorMsg);
+
+            setTimeout(function () {
+                $("#errMsg").fadeOut(2000)
+            }, 3000);
+
+            return;
+        }
+        document.getElementById("question" + idArray[i]).disabled = true;
+        document.getElementById("answer" + idArray[i]).disabled = true;
+        qNa += qValue + ":" + aValue;
+
+        if (i < (idNum - 1)) {
+            qNa += ";";
+        }
+    }
+
+    document.getElementById("QnA").value = qNa;
+    $('#QnAForm').submit();
+    document.getElementById("addQnA").disabled = true;
+    idNum = 0; // reset q and a input fields
+    idArray = [];
+}
+
+function AssignProfileId(profileId) // assigns correct profile id to hidden text field value
+{
+    $("#profileId").val(profileId);
+}
+
+if (document.getElementById("errMsg").style.display == "block")
+{
+    let errorMsg = document.createElement("p");
+
+    errorMsg.innerHTML = "Cannot connect to server!";
+
+    document.getElementById("errMsg").appendChild(errorMsg);
+    setTimeout(function () {
+        $("#errMsg").fadeOut(2000)
+    }, 3000);
+}
+
+/*function TurnOnOff(cmd)
+{
+    event.preventDefault();
+    if (cmd == TurnOn)
+    {
+
+    }
+}*/
