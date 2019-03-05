@@ -521,6 +521,5 @@ namespace FRED.Pages
                 Program.auxStream.Write(speak);
             }            
         }
-
     }
 }

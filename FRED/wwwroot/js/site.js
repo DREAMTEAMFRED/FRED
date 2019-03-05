@@ -1,5 +1,76 @@
 ﻿
+////// * Car bouncing * \\\\\\
 
+setInterval('BouncingCar()', 150);
+let bounce = document.getElementById('robotCar');
+let dir = 'up';
+let topPos = 150;
+
+function BouncingCar() {
+    if (dir == 'up') {
+        $(bounce).animate(
+            {
+                top: topPos
+            }, 50, 'swing')
+        dir = 'down'
+    }
+    else {
+        $(bounce).animate(
+            {
+                top: topPos - 2
+            }, 50, 'swing')
+        dir = 'up'
+    }
+}
+
+////// * Car Antenna * \\\\\\
+
+let antImages = ['images/antenna1.gif', 'images/antennaRight1.gif', 'images/antennaRight2.gif', 'images/antennaRight1.gif',
+    'images/antenna1.gif', 'images/antennaLeft1.gif', 'images/antennaLeft2.gif', 'images/antennaLeft1.gif'];
+let antCount = 0;
+let antTimer = setInterval('swayAntenna()', 100);
+
+function swayAntenna() {
+    $('#antenna').attr('src', antImages[antCount]);
+    antCount++
+    if (antCount == antImages.length) {
+        antCount = 0
+    }
+}
+
+//////  * Create car exhaust *  \\\\\\
+
+let particles = new Array();
+let car = document.getElementById('carContainer');
+
+for (let i = 0; i < 25; i++) {
+    let exhaust = new Exhaust(470, 500);
+    let exhaustPart = document.createElement('div');
+    exhaustPart.setAttribute('class', 'exhaustSmoke');
+    exhaustPart.setAttribute('style', 'width: ' + exhaust.size + 'px;' +
+        'height: ' + exhaust.size + 'px;');
+    car.appendChild(exhaustPart);
+    particles.push(exhaust);    
+}
+
+let exhaustTimer = setInterval('BlowSmoke()', 25);
+let allSmoke = document.getElementsByClassName('exhaustSmoke');
+
+function BlowSmoke() {
+    for (let i = 0; i < particles.length; i++) {
+        particles[i].Move();
+        let y = particles[i].y;
+        let x = particles[i].x;
+        $(allSmoke[i]).animate(
+            {
+                top: y,
+                left: x
+            }, 10, 'swing');
+    }
+} 
+
+
+/*
 let faceIsOpen = false;
 
 function ToggleFacePanel() {    
@@ -37,6 +108,8 @@ function ToggleAddPersonPanel() {
 function FredSees() {
     $('#fredSeesForm').submit();
 }
+*/
+
 
 function DetectFace() {
     $('#detectFaceForm').submit();

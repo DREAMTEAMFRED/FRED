@@ -21,7 +21,7 @@ namespace FRED.Utility
 
         public string GetIP()
         {
-            if (deviceStatusList[0] == "active")
+            if (deviceStatusList.Count > 0)
                 return internalIPs[0];
             else
                 return "inactive";

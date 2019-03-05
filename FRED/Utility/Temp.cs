@@ -20,6 +20,8 @@ namespace FRED.Utility
         public string displayTextPanel = "none";
         public string displayText = "";
         public string picStatus = "";
+        public string loginError = "";
+        public string createError = "";
 
         public void SetError(string error)
         {
@@ -29,6 +31,26 @@ namespace FRED.Utility
         public string GetError()
         {
             return error;
+        }
+
+        public void SetLoginError(string error)
+        {
+            loginError = error;
+        }
+
+        public string GetLoginError()
+        {
+            return loginError;
+        }
+
+        public void SetCreateError(string error)
+        {
+            createError = error;
+        }
+
+        public string GetCreateError()
+        {
+            return createError;
         }
 
         public void SetPicStatus(string status)

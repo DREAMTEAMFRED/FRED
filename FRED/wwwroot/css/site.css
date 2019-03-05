@@ -4,7 +4,7 @@ body {
     margin: 0 auto;
     padding-top: 10px;
     padding-bottom: 20px;
-    background: #3e3d3b; /*#1f2e45*/
+    background: #3e3d3b; 
     background-size: cover;
 }
 
@@ -19,96 +19,205 @@ body {
     src: url(COMPUTERRobot.ttf);
 }
 
-#login 
+header {
+    width: 100%;
+    height: 300px;
+    margin-top: 30px;
+    text-align: center;
+    padding-right: 70px;
+}
+
+#logout
 {
     position: fixed;
     z-index: 13;
     width: 100%;
     text-align: right;
-    padding: 5px 25px 5px 0;
+    padding-right: 25px;
+    
 }
-
-    #login input 
-    {
-        width: 140px;
-        padding: 1px;
+    #logout input {
+        width: 140px;        
         padding-left: 4px;
         color: #000;
         border: 1px solid #ccc;
         border-radius: 4px;
-        font-size: 1em;
-        font-family: 'Roboto', sans-serif;
+        font-size: 1.7em;
+        font-family: robo;
     }
 
-.loginButton:hover 
-{
-    background: #bb8;
-    color: #444;
+#loginTitle {    
+    text-align: center;
+    font-family: robo;
+
+    display: grid;          
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: minmax(35px, auto);
+    grid-template-areas: 
+        "err err err"
+        "usr usr usr"
+        "log log log"
+        "reg reg reg";                
+}
+    #loginError {
+        grid-area: err;
+        font-size: 1.7em;
+        color: red;
+        padding-bottom: 20px;
+    }
+    #userPass {
+        grid-area: usr;          
+        color: #a7b2b4;
+        font-size: 1.7em;        
+        text-shadow: -10px 10px 10px #000;
+    }   
+        #username {
+            padding-right: 130px;            
+        }
+        #password {
+            padding-right: 100px;            
+        }
+
+#login {    
+    grid-area: log;    
+}
+    .login {
+        width: 200px;
+        height: 35px;
+        margin: 10px;
+        padding-left: 6px;
+        color: #000;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 1.7em;
+        font-family: 'Roboto', sans-serif;
+        box-shadow: -10px 10px 10px #000;
+    }
+    .loginButton {
+        width: 100px;
+        height: 35px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 1.7em;
+        box-shadow: -10px 10px 10px #000;
+    }
+    .loginButton:hover 
+    {
+        background: #bb8;
+        color: #444;
+    }
+    #login i 
+    {
+        font-size: 1.6em;
+        margin: 0 11px;
+        color: #ddd;
+        float: left;
+    }
+    #login a:hover i 
+    {
+        color: #bb8;
+    }
+#register {
+    grid-area: reg;
+    text-align: center;
+    font-family: robo;
+    font-size: 1.7em;
+    color: #a7b2b4;
+    padding-top: 50px;
 }
 
-#login i 
-{
-    font-size: 1.6em;
-    margin: 0 11px;
-    color: #ddd;
+#carContainer {
+    width: 1000px;
+    height: 250px;    
+    margin-left: calc(50% - 450px);
 }
-
-#login a:hover i 
-{
-    color: #bb8;
-}
+    #robotCar {
+        position: fixed;
+        z-index: 9;
+        width: 900px;
+        top: 150px;                    
+    }
+    #frontWheel {
+        position: fixed;
+        z-index: 8;
+        width: 130px;
+        top: 415px;
+        margin-left: 120px;
+    }
+    #rearWheel {
+        position: fixed;
+        z-index: 8;
+        width: 130px;
+        top: 415px;
+        margin-left: 635px;
+    }
+    .exhaustSmoke
+    {
+        position: fixed;
+        z-index: 3;        
+        border-radius: 50%;
+        background: rgb(104, 100, 100);
+        margin-left: calc(50% - 950px);
+        opacity: .39;
+    }
 
 
 ///////////// /* AddUser Page*/ //////////////
 
-#userGrid 
+#createAccountGrid 
 {
     display: grid;
-    width: 100%;
-    opacity: .93;
-    background-size: 70%;
+    width: 800px;
+    min-height: 400px;    
+    border: 1px solid #444;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, .13);
+    
     grid-template-columns: repeat(6, 1fr);
     grid-auto-rows: minmax(auto, auto);
     grid-template-areas: 
         "hdr hdr hdr hdr hdr hdr"
-        " .   .  sup sup  .   . " 
+        " .   .   .   .   .   . " 
         "ftr ftr ftr ftr ftr ftr";
 }
 
-#newUser 
-{
-    grid-area: sup;
-    margin: auto;
+#newUserForm {
+    width: 1000px;
     text-align: center;
+    margin-top: 100px;
+    margin-left: calc(50% - 470px);
+    font-size: 1.3em;
+    font-family: robo;
+    color: #a7b2b4;
 }
-
-#newUserForm 
-{
-    grid-area: sup;
-    text-align: center;
-    padding: 25px;
-    padding-top: 47px;
-    border: 1px solid #444;
-    border-radius: 12px;
-    background: rgba(255, 255, 255, .13);
-}
-
+    #createError {
+        font-size: 1.5em;
+        color: red;
+        padding-bottom: 20px;
+        padding-right: 50px;
+    }
     #newUserForm input {
         width: 220px;
         padding: 4px;
         padding-left: 8px;
-        color: #999;
+        color: #000;
         border: 1px solid #ccc;
         border-radius: 4px;
         font-size: 1.2em;
-        font-family: 'Roboto', sans-serif;
-        margin: 1px;
+        font-family: sans-serif;
     }
-
         #newUserForm input[type="submit"] {
             font-weight: 700;
+            color: #444;             
+        }
+        #createBtn {
+            padding-top: 20px;
+            margin-right: 80px;
+        }
+        #createBtn:hover 
+        {
+            background: #bb8;
             color: #444;
-            margin-bottom: 0;
         }
 
 ///////////// /* UserControls Page*/ //////////////
@@ -195,7 +304,7 @@ body {
     height: 300px;
     margin-left: calc(50% - 390px);
     padding: 10px 10px 10px 20px;
-    background: rgba(0, 0, 0, .8);
+    background: rgba(0, 0, 0, .7);
     border: 1px solid #000;
     border-radius: 12px;
     box-shadow: 0 4px 11px #999;
@@ -341,7 +450,7 @@ body {
     height: 300px;
     margin-left: calc(50% - 390px);
     padding: 10px 10px 10px 20px;
-    background: rgba(0, 0, 0, .8);
+    background: rgba(0, 0, 0, .7);
     border: 1px solid #000;
     border-radius: 12px;
     box-shadow: 0 4px 11px #999;
@@ -422,7 +531,7 @@ body {
     max-height: 600px;
     margin-left: calc(50% - 420px);
     padding: 10px 10px 10px 20px;
-    background: rgba(0, 0, 0, .87);
+    background: rgba(0, 0, 0, .75);
     border: 1px solid #000;
     border-radius: 12px;
     box-shadow: 0 4px 11px #999;
@@ -504,7 +613,7 @@ body {
     height: 400px;    
     margin-left: calc(50% - 420px);
     padding: 10px 10px 10px 20px;
-    background: rgba(0, 0, 0, .8);
+    background: rgba(0, 0, 0, .7);
     border: 1px solid #000;
     border-radius: 12px;
     box-shadow: 0 4px 11px #999;
@@ -517,11 +626,11 @@ body {
         text-align: center;
     }
     #addPersonTable {
-            margin-left: 150px;
-            border-collapse: collapse;
-            width: calc(100% - 400px);
-            font-size: 1.3em;
-        }
+        margin-left: 150px;
+        border-collapse: collapse;
+        width: calc(100% - 400px);
+        font-size: 1.3em;
+    }
         #addPersonTable td {
             padding: 10px;
         }
@@ -572,7 +681,7 @@ body {
     height: 280px;
     margin-left: calc(50% - 420px);
     padding: 10px 10px 10px 20px;
-    background: rgba(0, 0, 0, .8);
+    background: rgba(0, 0, 0, .7);
     border: 1px solid #000;
     border-radius: 12px;
     box-shadow: 0 4px 11px #999;
@@ -623,11 +732,11 @@ body {
     height: 300px;
     margin-left: calc(50% - 200px);
     padding: 30px;
-    background: rgba(0, 0, 0, .8);
+    background: rgba(0, 0, 0, .7);
     border: 1px solid #000;
     border-radius: 12px;
     box-shadow: 0 4px 11px #999;
-    top: 250px;
+    top: 200px;
     color: #fff;
     text-align: center;
     font-size: 1.2em;
@@ -646,10 +755,8 @@ body {
             font-size: 1em;
             font-family: 'Roboto', sans-serif;
         }
-
-
-
-
+        
+        
 .white {
     color: #fff;
 }
