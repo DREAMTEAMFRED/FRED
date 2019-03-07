@@ -3,14 +3,16 @@ using FRED.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FRED.Migrations
 {
     [DbContext(typeof(FredContext))]
-    partial class FredContextModelSnapshot : ModelSnapshot
+    [Migration("20190307172418_fredDB")]
+    partial class fredDB
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

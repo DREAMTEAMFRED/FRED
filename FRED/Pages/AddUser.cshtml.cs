@@ -33,7 +33,7 @@ namespace FRED.Pages
 
                     if (username == Convert.ToString(exists))
                     {
-                        Program.Temp.SetCreateError("Username Already Exsits!");                        
+                        Program.Temp.SetCreateError("Username Alreawaqdy Exsits!");                        
                     }
                     else
                     {

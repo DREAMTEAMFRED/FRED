@@ -18,7 +18,6 @@ namespace FRED.Pages
         public string errorMsg = "none";
         public string name = Program.Temp.ProfileName;
         public string desc = Program.Temp.ProfileDesc;
-        public bool disableEnroll = Program.Temp.enrollDisable;
         public bool enrollBtn1 = Program.Temp.GetVoiceBtn1();
         public bool enrollBtn2 = Program.Temp.GetVoiceBtn2();
         public string showUpdKBWindow = Program.Temp.GetUpdKBDisplay();
@@ -57,7 +56,6 @@ namespace FRED.Pages
             enrollBtn1 = Program.Temp.GetVoiceBtn1();
             enrollBtn2 = Program.Temp.GetVoiceBtn2();
             recAudio = Program.Temp.GetRecordingStat();
-            disableEnroll = Program.Temp.enrollDisable;
         /*************************************/
     }        
 
@@ -743,7 +741,6 @@ namespace FRED.Pages
 
                     Program.Temp.SetEnrollmentDisplay("block");
                     Program.Temp.SetEnrollDisplay("block");
-                    Program.Temp.enrollDisable = true;
                     sr.Close();
                 }
                 else
