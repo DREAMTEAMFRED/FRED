@@ -22,6 +22,8 @@ namespace FRED.Utility
         public string displayTextPanel = "none";
         public string displayText = "";
         public string picStatus = "";
+        public string loginError = "";
+        public string createError = "";
 
         /***************Mark's Variables*************/
         static string enrDisplay = "none"; // controls the enroll display popoup window
@@ -36,8 +38,6 @@ namespace FRED.Utility
 
         public string ProfileName { get; set; }
         public string ProfileDesc { get; set; }
-        public bool enrollDisable { get; set; }
-
         /***************************************************************/
         public void SaveData(byte[] data)
         {
@@ -164,6 +164,26 @@ namespace FRED.Utility
         public string GetError()
         {
             return error;
+        }
+
+        public void SetLoginError(string error)
+        {
+            loginError = error;
+        }
+
+        public string GetLoginError()
+        {
+            return loginError;
+        }
+
+        public void SetCreateError(string error)
+        {
+            createError = error;
+        }
+
+        public string GetCreateError()
+        {
+            return createError;
         }
 
         public void SetPicStatus(string status)
