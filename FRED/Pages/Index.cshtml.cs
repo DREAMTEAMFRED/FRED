@@ -26,13 +26,19 @@ namespace FRED.Pages
                 if (Program.Controller.GetDeviceStatus() == "active")
                 {
                     string server = Program.Controller.GetIP();
-                    int port = 13000;
+                    int port = 21567;
+                    int auxPort = 13000;
+                    //Byte[] speed = System.Text.Encoding.ASCII.GetBytes("speed50");
 
                     try
                     {
                         Program.coreClient = new TcpClient();
-                        Program.coreClient.Connect(server, port);
+                        Program.coreClient.Connect(server, auxPort);
                         Program.coreClient.Close();
+
+                        Program.client = new TcpClient();
+                        Program.client.Connect(server, port);                        
+                        Program.client.Close();
                     }
                     catch
                     {

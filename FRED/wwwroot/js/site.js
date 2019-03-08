@@ -1,4 +1,161 @@
-﻿
+﻿function FadeOut() {       
+    setTimeout(function () {
+        $('#screen').fadeOut(2000)
+        $('#displayText').fadeOut(2000)
+    }, 3000);
+}
+
+let KeyCtrl;
+
+function KeyboardCtrl(status) {    
+    KeyCtrl = status;
+}
+
+let slider = document.getElementById("mySpeed");
+let output = document.getElementById("speed");
+output.innerHTML = slider.value; // Display the default slider value
+
+slider.oninput = function () {    
+    output.innerHTML = this.value;
+}
+
+slider.onchange = function () {    
+    this.form.submit();
+}
+
+let keyDown = false;
+    
+let keys = {
+    37: 'left',
+    39: 'right',
+    40: 'down',
+    38: 'up',
+    32: 'space',
+    65: 'A',
+    66: 'B',
+    67: 'C',
+    68: 'D',
+    69: 'E',
+    70: 'F',
+    71: 'G',
+    72: 'H',
+    73: 'I',
+    74: 'J',
+    75: 'K',
+    76: 'L',
+    77: 'M',
+    78: 'N',
+    79: 'O',
+    80: 'P',
+    81: 'Q',
+    82: 'R',
+    83: 'S',
+    84: 'T',
+    85: 'U',
+    86: 'V',
+    87: 'W',
+    88: 'X',
+    89: 'Y',
+    90: 'Z',
+};
+    
+document.body.onkeydown = function (e) {
+
+    if (typeof keys[e.keyCode] !== 'undefined' && KeyCtrl == 'grid') {
+        let forward = document.getElementById("forwardBtn");
+        let backward = document.getElementById("backwardBtn");
+        let left = document.getElementById("leftBtn");
+        let right = document.getElementById("rightBtn");
+        let camUp = document.getElementById("camUpBtn");
+        let camDown = document.getElementById("camDownBtn");
+        let camRight = document.getElementById("camRightBtn");
+        let camLeft = document.getElementById("camLeftBtn");
+        let camHome = document.getElementById("camHomeBtn");
+        let stop = document.getElementById("stopBtn");
+        let home = document.getElementById("homeBtn");
+
+        switch (e.keyCode) {
+            case 38: {                                            
+                forward.submit();                                    
+                break;
+            }
+            case 40: {                
+                backward.submit();
+                break;
+            }
+            case 37: {
+                left.submit();
+                break;
+            }
+            case 39: {
+                right.submit();
+                break;
+            }
+            case 87: {
+                camUp.submit();
+                break;
+            }
+            case 83: {
+                camDown.submit();
+                break;
+            }
+            case 65: {
+                camLeft.submit();
+                break;
+            }
+            case 68: {
+                camRight.submit();
+                break;
+            }
+            case 66: {
+                camHome.submit();
+                break;
+            }
+            case 32: {
+                stop.submit();
+                home.submit();
+                break;
+            }
+            default: {
+                KeyHandler(keys[e.keyCode]);
+                break;
+            }
+        }
+    }
+};
+
+    document.body.onkeyup = function (e) {
+        if (typeof keys[e.keyCode] !== 'undefined' && KeyCtrl == 'grid') {
+            let stop = document.getElementById("stopBtn");
+            let home = document.getElementById("homeBtn");
+
+            switch (e.keyCode) {
+                case 38: {
+                    stop.submit();
+                    break;
+                }
+                case 40: {
+                    stop.submit();
+                    break;
+                }
+                case 37: {
+                    home.submit();
+                    break;
+                }
+                case 39: {
+                    home.submit();
+                    break;
+                }
+                default: {
+                    KeyHandler(keys[e.keyCode]);
+                    break;
+                }
+            }
+        }
+    };
+
+
+
 ////// * Car bouncing * \\\\\\
 
 setInterval('BouncingCar()', 150);
@@ -20,21 +177,6 @@ function BouncingCar() {
                 top: topPos - 2
             }, 50, 'swing')
         dir = 'up'
-    }
-}
-
-////// * Car Antenna * \\\\\\
-
-let antImages = ['images/antenna1.gif', 'images/antennaRight1.gif', 'images/antennaRight2.gif', 'images/antennaRight1.gif',
-    'images/antenna1.gif', 'images/antennaLeft1.gif', 'images/antennaLeft2.gif', 'images/antennaLeft1.gif'];
-let antCount = 0;
-let antTimer = setInterval('swayAntenna()', 100);
-
-function swayAntenna() {
-    $('#antenna').attr('src', antImages[antCount]);
-    antCount++
-    if (antCount == antImages.length) {
-        antCount = 0
     }
 }
 
@@ -70,46 +212,14 @@ function BlowSmoke() {
 } 
 
 
-/*
-let faceIsOpen = false;
 
-function ToggleFacePanel() {    
-    if (!faceIsOpen) { // open panel        
-        $('#addFacePanel').animate({
-            top: 150
-        }, 220, 'swing');
-        faceIsOpen = true;        
-    }
-    else { // close panel        
-        $('#addFacePanel').animate({
-            top: -800
-        }, 220, 'swing');
-        faceIsOpen = false;
-    }    
-} // TogglePanel()
-
-let addPersonIsOpen = false;
-
-function ToggleAddPersonPanel() {
-    if (!addPersonIsOpen) { // open panel        
-        $('#addPersonPanel').animate({
-            top: 200
-        }, 220, 'swing');
-        addPersonIsOpen = true;
-    }
-    else { // close panel        
-        $('#addPersonPanel').animate({
-            top: -800
-        }, 220, 'swing');
-        addPersonIsOpen = false;
-    }
-} // TogglePanel()
-
-function FredSees() {
-    $('#fredSeesForm').submit();
+function OpenAddPersonPanel() {
+    $('#addPersonForm').submit();
 }
-*/
 
+function CloseAddPersonPanel() {
+    $('#closePersonForm').submit();
+}
 
 function DetectFace() {
     $('#detectFaceForm').submit();
@@ -141,169 +251,10 @@ function CloseVisionPanel() {
 }
 
 
-// refresh page and and run method
-window.onload = function () {
-    var reloading = sessionStorage.getItem("reloading");
-    if (reloading) {
-        sessionStorage.removeItem("reloading");
-        //ToggleFacePanel();
-    }
-    
-    setTimeout(function () {
-        $('#screen').fadeOut(2000)  
-        $('#displayText').fadeOut(2000)
-    }, 3000);
-    
-}
-
-function Refresh() {
-    sessionStorage.setItem("reloading", "true");
-    document.location.reload();
-}
 
 
-/*
-let keys = {
-    37: 'left',
-    39: 'right',
-    40: 'down',
-    38: 'up',
-    32: 'space',
-    65: 'A',
-    66: 'B',
-    67: 'C',
-    68: 'D',
-    69: 'E',
-    70: 'F',
-    71: 'G',
-    72: 'H',
-    73: 'I',
-    74: 'J',
-    75: 'K',
-    76: 'L',
-    77: 'M',
-    78: 'N',
-    79: 'O',
-    80: 'P',
-    81: 'Q',
-    82: 'R',
-    83: 'S',
-    84: 'T',
-    85: 'U',
-    86: 'V',
-    87: 'W',
-    88: 'X',
-    89: 'Y',
-    90: 'Z',
-};
 
-let keyDown = false;
 
-document.body.onkeydown = function (e) {
 
-    if (typeof keys[e.keyCode] !== 'undefined') {
-        let forward = document.getElementById("forwardBtn");
-        let backward = document.getElementById("backwardBtn");
-        let left = document.getElementById("leftBtn");
-        let right = document.getElementById("rightBtn");
-        let camUp = document.getElementById("camUp");
-        let camDown = document.getElementById("camDown");
-        let camRight = document.getElementById("camRight");
-        let camLeft = document.getElementById("camLeft");
-        let camHome = document.getElementById("camHome");
-        let stop = document.getElementById("stopBtn");
-        let home = document.getElementById("homeBtn");
 
-        switch (e.keyCode) {
-            case 38: {
-                forward.click();
-                break;
-            }
-            case 40: {
-                backward.click();
-                break;
-            }
-            case 37: {
-                left.click();
-                break;
-            }
-            case 39: {
-                right.click();
-                break;
-            }
-            case 87: {
-                camUp.click();
-                break;
-            }
-            case 83: {
-                camDown.click();
-                break;
-            }
-            case 65: {
-                camLeft.click();
-                break;
-            }
-            case 68: {
-                camRight.click();
-                break;
-            }
-            case 66: {
-                camHome.click();
-                break;
-            }
-            case 32: {
-                stop.click();
-                home.click();
-                break;
-            }
-            default: {
-                KeyHandler(keys[e.keyCode]);
-                break;
-            }
-        }
-    }
-};
 
-document.body.onkeyup = function (e) {
-
-    if (typeof keys[e.keyCode] !== 'undefined') {
-        let stop = document.getElementById("stopBtn");
-        let home = document.getElementById("homeBtn");
-
-        switch (e.keyCode) {
-            case 38: {
-                stop.click();
-                break;
-            }
-            case 40: {
-                stop.click();
-                break;
-            }
-            case 37: {
-                home.click();
-                break;
-            }
-            case 39: {
-                home.click();
-                break;
-            }
-            default: {
-                KeyHandler(keys[e.keyCode]);
-                break;
-            }
-        }
-    }
-};
-*/
-
-let slider = document.getElementById("mySpeed");
-let output = document.getElementById("speed");
-output.innerHTML = slider.value; // Display the default slider value
-
-slider.oninput = function () {
-    output.innerHTML = this.value;
-}
-
-slider.onchange = function () {
-    this.form.submit();
-}

@@ -15,6 +15,7 @@ namespace FRED.Utility
         public string displayFacePanel = "none";
         public string displayErrorPanel = "none";
         public string displayTakePicPanel = "none";
+        public string displayAddPersonPanel = "none";
         public string lightStatus = "off";
         public string error = null;
         public string displayTextPanel = "none";
@@ -101,6 +102,16 @@ namespace FRED.Utility
         public string GetFacePanelStatus()
         {
             return displayFacePanel;
+        }
+
+        public void SetAddPersonPanel(string display)
+        {
+            displayAddPersonPanel = display;
+        }
+
+        public string GetAddPersonPanelStatus()
+        {
+            return displayAddPersonPanel;
         }
 
         public void SetControlPanel(string display)

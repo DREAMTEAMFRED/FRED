@@ -617,8 +617,8 @@ header {
     border: 1px solid #000;
     border-radius: 12px;
     box-shadow: 0 4px 11px #999;
-    top: -500px;
-    color: #fff;
+    top: 150px;
+    color: #fff;    
 }
     #addPersonPanelTop {
         width: 100%;

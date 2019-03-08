@@ -16,6 +16,7 @@ namespace FRED.Pages
         public string displayControlPanel = Program.Temp.GetContorlPanelStatus();
         public string displayVisionPanel = Program.Temp.GetVisionPanelStatus();
         public string displayFacePanel = Program.Temp.GetFacePanelStatus();
+        public string displayAddPersonPanel = Program.Temp.GetAddPersonPanelStatus();
         public string displayTakePicPanel = Program.Temp.GetTakePicPanelStatus();
         public string light = Program.Temp.GetLightStatus();
         public int mySpeed = Program.Temp.GetSpeed();
@@ -44,8 +45,23 @@ namespace FRED.Pages
             Response.Redirect("./UserControls");
         }
 
+        public void OnPostOpenAddPersonPanel()
+        {
+            Program.Temp.SetAddPersonPanel("block");
+            Program.Temp.SetFacePanel("none");
+            Response.Redirect("./UserControls");
+        }
+
+        public void OnPostCloseAddPersonPanel()
+        {
+            Program.Temp.SetAddPersonPanel("none");
+            Program.Temp.SetFacePanel("block");
+            Response.Redirect("./UserControls");
+        }
+
         public void OnPostOpenAddFacePanel()
-        {          
+        {
+            Disconnect();
             if (displayFacePanel == "none")                            
                 Program.Temp.SetFacePanel("block");                           
             else
@@ -65,9 +81,15 @@ namespace FRED.Pages
         public void OnPostOpenControlPanel()
         {
             if (displayControlPanel == "none")
+            {
                 Program.Temp.SetControlPanel("grid");
+                Connect();
+            }             
             else
+            {
                 Program.Temp.SetControlPanel("none");
+                Disconnect();
+            }                
 
             Program.Temp.SetFacePanel("none");
             Program.Temp.SetVisionPanel("none");
@@ -77,11 +99,13 @@ namespace FRED.Pages
         public void OnPostCloseControlPanel()
         {
             Program.Temp.SetControlPanel("none");
+            Disconnect();
             Response.Redirect("./UserControls");
         }
 
         public void OnPostOpenVisionPanel()
         {
+            Disconnect();
             if (displayVisionPanel == "none")
                 Program.Temp.SetVisionPanel("grid");
             else
@@ -98,15 +122,15 @@ namespace FRED.Pages
             Response.Redirect("./UserControls");
         }
 
-        public void OnPostLogout()
+        public void OnPostLogout() // add disconnect
         {
             Program.Controller.UserID = 0;
             Program.Controller.IsVerified = false;
-
+            Disconnect();
             Response.Redirect("./Index");
         }
 
-        public void OnPostConnect(string ipAddress)
+        public void Connect()
         {            
             string server = Program.Controller.GetIP();
             int port = 21567;
@@ -125,29 +149,29 @@ namespace FRED.Pages
             }            
         }
 
-        public void OnPostDisconnect()
+        public void Disconnect()
         {
+            
             Byte[] stop = System.Text.Encoding.ASCII.GetBytes("stop");
             if (Program.stream != null)
             {
-                Program.stream.Write(stop);
+                if (displayControlPanel != "none")
+                    Program.stream.Write(stop);
                 Program.stream.Close();
             }
             if (Program.client != null)
                 Program.client.Close();
         }
 
-        public void OnPostAuxConnect()
-        {
-            Program.Temp.SetError(null);
-            Program.Controller.GetDeviceList();
-            string server = Program.Controller.GetIP();
-            int port = 13000;
+        public void AuxConnect()
+        {            
+            string server = Program.Controller.GetIP();            
+            int auxPort = 13000;
 
             try
             {
                 Program.coreClient = new TcpClient();
-                Program.coreClient.Connect(server, port);
+                Program.coreClient.Connect(server, auxPort);
                 Program.auxStream = Program.coreClient.GetStream();
                 Program.Temp.SetErrorPanel("none");                
             }
@@ -155,21 +179,42 @@ namespace FRED.Pages
             {
                 Program.Temp.SetError("Cant connect to server");
                 OpenErrorPanel();
-            }
+            }          
             
-            //Response.Redirect("./UserControls");
         }
 
-        public void OnPostAuxDisconnect()
+        public void OnPostReconnect()
         {
-            Byte[] stop = System.Text.Encoding.ASCII.GetBytes("stop");
-            if (Program.auxStream.CanWrite)
+            Program.Temp.SetError(null);
+            Program.Controller.GetDeviceList();
+            string server = Program.Controller.GetIP();
+            int port = 21567;
+            int auxPort = 13000;
+            //Byte[] speed = System.Text.Encoding.ASCII.GetBytes("speed50");
+
+            try
             {
-                Program.auxStream.Write(stop);
-                Program.auxStream.Close();
-            }
-            if (Program.client != null)
+                Program.coreClient = new TcpClient();
+                Program.coreClient.Connect(server, auxPort);
                 Program.coreClient.Close();
+                //Program.auxStream = Program.coreClient.GetStream();
+
+                Program.client = new TcpClient();
+                Program.client.Connect(server, port);
+                Program.client.Close();
+                //Program.stream = Program.client.GetStream();
+                //Program.stream.Write(speed);
+
+                Program.Temp.SetErrorPanel("none");
+                Program.Temp.SetControlPanel("none");
+            }
+            catch
+            {
+                Program.Temp.SetError("Cant connect to server");
+                OpenErrorPanel();
+            }
+
+            Response.Redirect("./UserControls");
         }
 
         public void OnPostLight(string toggleLight)
@@ -308,7 +353,7 @@ namespace FRED.Pages
 
         public void OnPostSpeak(string text)
         {
-            OnPostAuxConnect();
+            AuxConnect();
             if (Program.auxStream == null)
             {
                 Program.Temp.SetError("Not connected to the server");
@@ -337,7 +382,7 @@ namespace FRED.Pages
 
         public void OnPostFredSees()
         {
-            OnPostAuxConnect();
+            AuxConnect();
             string fredSees ="";
             if (Program.auxStream == null)
             {
@@ -372,7 +417,7 @@ namespace FRED.Pages
 
         public void OnPostFredReads()
         {
-            OnPostAuxConnect();
+            AuxConnect();
             string fredReads;
             if (Program.auxStream == null)
             {
@@ -407,7 +452,7 @@ namespace FRED.Pages
 
         public void OnPostDetectFace()
         {
-            OnPostAuxConnect();
+            AuxConnect();
             Program.FredVision.GetVision("detect", null).Wait();
             Program.FredVision.DetectFace().Wait();
             List<string> names = Program.FredVision.GetNames();
@@ -483,10 +528,13 @@ namespace FRED.Pages
             }
             Response.Redirect("./UserControls");            
         }
+               
         
         public void OnPostCreatePerson(string name, string desc)
         {
-            Program.FredVision.CreatePerson(name, desc).Wait();
+            Program.FredVision.CreatePerson(name, desc).Wait();            
+            Program.Temp.SetAddPersonPanel("none");
+            Program.Temp.SetFacePanel("block");
             Program.FredVision.GetFacesList().Wait();
             Response.Redirect("./UserControls");
         }
