@@ -106,71 +106,119 @@
         </div>
     </div>
 
-    <div id="visionPanel" style="display: @Model.displayVisionPanel;">
-        <div id="closeVisionPanel">
-            <form method="post" asp-page-handler="CloseVisionPanel" id="closeVisionPanelForm">
-                <i class="far fa-times-circle" onclick="CloseVisionPanel()"></i>
-            </form>
-        </div>
-        <div id="fredSpeak">
-            <form method="post" asp-page-handler="Speak">
-                <span>Fred says....</span>
-                <input id="speakInput" type="text" name="text" value="enter text to speak" />
-                <input id="speakBtn" type="submit" value="Speak" />
-            </form>
-        </div>
-        <div id="fredDetectFace">
-            <form method="post" asp-page-handler="DetectFace">
-                <input class="ctrlBtn" type="image" onclick="" src="~/images/detect-face-fred-512.png" title="Detect Faces" />
-            </form>
-        </div>
-        <div id="fredSees">
-            <form method="post" asp-page-handler="FredSees" id="fredSeesForm">
-                <input class="ctrlBtn" type="image" onclick="FredSees()" src="~/images/fred-sees.png" title="What does FRED see" />
-            </form>
-        </div>
-        <div id="fredReads">
-            <form method="post" asp-page-handler="FredReads" id="fredReadsForm">
-                <input class="ctrlBtn" type="image" onclick="FredReads()" src="~/images/fred-reads-512.png" title="Make FRED read" />
-            </form>
-        </div>
+<div id="visionPanel" style="display: @Model.displayVisionPanel;">
+    <div id="closeVisionPanel">
+        <form method="post" asp-page-handler="CloseVisionPanel" id="closeVisionPanelForm">
+            <i class="far fa-times-circle" onclick="CloseVisionPanel()"></i>
+        </form>
     </div>
+    <div id="fredSpeak">
+        <form method="post" asp-page-handler="Speak">
+            <span>Fred says....</span>
+            <input id="speakInput" type="text" name="text" value="enter text to speak" />
+            <input id="speakBtn" type="submit" onclick="CloseWindow('enroll');" value="Speak" />
+        </form>
+    </div>
+    <div id="fredDetectFace">
+        <form method="post" asp-page-handler="DetectFace">
+            <input class="ctrlBtn" type="image" onclick="" src="~/images/detect-face-fred-512.png" title="Detect Faces" />
+        </form>
+    </div>
+    <div id="fredqna">
+        <form method="post" asp-page-handler="">
+            <input class="ctrlBtn" type="image" onclick="ShowWindow(this.value)" src="~/images/updateKB.png" title="Add custom QnA" value="updKB" />
+        </form>
+    </div>
+    <div id="fredSees">
+        <form method="post" asp-page-handler="FredSees" id="fredSeesForm">
+            <input class="ctrlBtn" type="image" onclick="FredSees()" src="~/images/fred-sees.png" title="What does FRED see" />
+        </form>
+    </div>
+    <div id="fredenroll">
+        <form method="post" asp-page-handler="">
+            <input class="ctrlBtn" type="image" onclick="ShowWindow(this.value)" src="~/images/enrollVoice.png" title="Enroll Voice" value="enroll" />
+        </form>
+    </div>
+    <div id="fredReads">
+        <form method="post" asp-page-handler="FredReads" id="fredReadsForm">
+            <input class="ctrlBtn" type="image" onclick="FredReads()" src="~/images/fred-reads-512.png" title="Make FRED read" />
+        </form>
+    </div>
+</div>
 
-    <div id="addFacePanel" style="display: @Model.displayFacePanel;">
-        <div id="facePanelTop">
-            <div id="closeTop">
-                <form method="post" asp-page-handler="CloseAddFacePanel" id="closeFacePanelForm">
-                    <i class="far fa-times-circle" onclick="CloseFacePanel()"></i>
-                </form>
-            </div>
-            <table id="faceTable">
-                <tr>
-                    <th><h4>Name</h4></th>
-                    <th><h4>Description</h4></th>
-                    <th><h4>Stored Faces</h4></th>
-                </tr>
-                @for (int i = 0; i < Program.Temp.GetListNames().Count; i++)
-                {
-                    <tr>
-                        <td>@Program.Temp.GetListNames()[i]</td>
-                        <td>@Program.Temp.GetListDesc()[i]</td>
-                        <td class="centered-cell">@Program.Temp.GetListFaceCounts()[i]</td>
-                        <td>
-                            <form method="post" asp-page-handler="AddFace" id="addFaceFormSubmit">
-                                <input type="hidden" name="person" value="@Program.Temp.GetListPersonIDs()[i]" />
-                                <input id="addFaceBtn" class="addFaceBtn" type="image" src="~/images/addFace-btn.png" />
-                            </form>
-                        </td>
-                        <td>
-                            <form method="post" asp-page-handler="DeletePerson">
-                                <input type="hidden" name="personID" value="@Program.Temp.GetListPersonIDs()[i]" />
-                                <input class="removeBtn" type="image" src="~/images/red-delete-rectangle.png" />
-                            </form>
-                        </td>
-                    </tr>
-                }
-            </table>
+<div id="voicePanel" style="display: @Model.displayVoicePanel;">
+    <div id="closeVisionPanel">
+        <form method="post" asp-page-handler="CloseVoicePanel" id="closeVoicePanelForm">
+            <i class="far fa-times-circle" onclick="CloseVoicePanel()"></i>
+        </form>
+    </div>
+    <div id="fredRec">
+        <form method="post" asp-page-handler="Instruction">
+            <input class="ctrlBtn" type="image" onclick="Record();" src="~/images/recorder.png" title="Fred recording.." />
+            <input type="text" name="intent" hidden value="Record" />
+        </form>
+    </div>
+    <div id="stopRec">
+        <form method="post" asp-page-handler="Instruction">
+            <input class="ctrlBtn" type="image" onclick="StopRecording()" name="intent" src="~/images/stop_recording.png" title="Stop recording.." />
+            <input type="text" name="intent" hidden value="StopR" />
+        </form>
+    </div>
+    <div id="playBack">
+        <form method="post" asp-page-handler="Instruction">
+            <input class="ctrlBtn" type="image" name="intent" src="~/images/playbackRec2.png" title="play recording.." />
+            <input type="text" name="intent" hidden value="PlayB" />
+        </form>
+    </div>
+    <div id="askFred">
+        <form method="post" asp-page-handler="Instruction">
+            <input class="ctrlBtn" type="image" name="intent" src="~/images/qnabot3.png" title="Ask me anything.." />
+            <input type="text" name="intent" hidden value="AskFred" />
+        </form>
+    </div>
+    <div id="spyFred">
+        <form method="post" asp-page-handler="Instruction">
+            <input class="ctrlBtn" type="image" name="intent" src="~/images/spyFred.png" title="Spy mode.." />
+            <input type="text" name="intent" hidden value="FredSpy" />
+        </form>
+    </div>
+</div>
+
+<div id="addFacePanel" style="display: @Model.displayFacePanel;">
+    <div id="facePanelTop">
+        <div id="closeTop">
+            <form method="post" asp-page-handler="CloseAddFacePanel" id="closeFacePanelForm">
+                <i class="far fa-times-circle" onclick="CloseFacePanel()"></i>
+            </form>
         </div>
+        <table id="faceTable">
+            <tr>
+                <th><h4>Name</h4></th>
+                <th><h4>Description</h4></th>
+                <th><h4>Stored Faces</h4></th>
+            </tr>
+            @for (int i = 0; i < Program.Temp.GetListNames().Count; i++)
+            {
+                <tr>
+                    <td>@Program.Temp.GetListNames()[i]</td>
+                    <td>@Program.Temp.GetListDesc()[i]</td>
+                    <td class="centered-cell">@Program.Temp.GetListFaceCounts()[i]</td>
+                    <td>
+                        <form method="post" asp-page-handler="AddFace" id="addFaceFormSubmit">
+                            <input type="hidden" name="person" value="@Program.Temp.GetListPersonIDs()[i]" />
+                            <input id="addFaceBtn" class="addFaceBtn" type="image" src="~/images/addFace-btn.png" />
+                        </form>
+                    </td>
+                    <td>
+                        <form method="post" asp-page-handler="DeletePerson">
+                            <input type="hidden" name="personID" value="@Program.Temp.GetListPersonIDs()[i]" />
+                            <input class="removeBtn" type="image" src="~/images/red-delete-rectangle.png" />
+                        </form>
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
 
         <div id="facePanelBottom">
             <div id="facePanelBottomLeft">
@@ -264,48 +312,158 @@
     }
        
 
-    <div id="toggleDiv">
-        <form method="post" asp-page-handler="OpenControlPanel" >
-            @if (Model.displayControlPanel == "none")
+    <div id="camControl">
+        <div class="title"><h3>Cam Controls</h3></div>
+        <div class="controlLeft">
+            <form method="post" asp-page-handler="CamControl">
+                <input id="camLeft" class="controlBtn" type="submit" name="cmd" value="Left" />
+            </form>
+        </div>
+        <div class="controlCenter">
+            <form method="post" asp-page-handler="CamControl">
+                <input id="camUp" class="controlBtn" type="submit" name="cmd" value="Up" />
+                <input id="camHome" class="controlBtn" type="submit" name="cmd" value="Home" />
+                <input id="camDown" class="controlBtn" type="submit" name="cmd" value="Down" />
+            </form>
+        </div>
+        <div class="controlRight">
+            <form method="post" asp-page-handler="CamControl">
+                <input id="camRight" class="controlBtn" type="submit" name="cmd" value="Right" />
+            </form>
+        </div>
+    </div>
+</div>
+-->
+
+<!--Mark's html-->
+<div id="errMsg" class="divEffects" style="display: @Model.errorMsg;">
+    <!--<p>created with javascript!</p>-->
+</div>
+
+<div id="recordAud" class="divEffects" style="display: @Model.recAudio;">
+    <img src="~/images/audio_recording.gif" />
+    <p>Recording Audio!</p>
+</div>
+<div id="enroll" class="divEffects" style="display: @Model.showEnrollWindow;">
+    <div style="position: relative; min-height: 250px;">
+        <form id="recVoice" method="post" asp-page-handler="Instruction">
+            <i id="close" onclick="CloseWindow('enroll');" class="fas fa-times-circle fa-lg"></i>
+            <button id="cancE" type="submit" name="intent" value="CancEnroll" hidden></button>
+            <input id="name" type="text" placeholder="enter name" name="profileName" value="@Model.name" runat="server" />
+            <br /><br />
+            <input id="desc" type="text" placeholder="description e.g husband,wife, son etc..." name="profileDesc" value="@Model.desc" disabled runat="server" />
+            <input type="text" id="subText" name="text" hidden />
+            <br /><br />
+            @if (Model.enrollBtn1)
             {
-                <input class="toggleBtn" type="image" src="~/images/toggle-control-panel-off.png" />
+                <button type="submit" id="enrollBtn1" disabled onclick="RecVoice(this.id)" name="intent" value="Reco1">Voice 1</button>
             }
             else
             {
-                <input class="toggleBtn" type="image" src="~/images/toggle-control-panel-on.png" />
+                <button type="submit" id="enrollBtn1" onclick="RecVoice()" disabled name="intent" value="Reco1">Voice 1&#10004;</button>
             }
-        </form>
-        <form method="post" asp-page-handler="OpenVisionPanel">
-            @if (Model.displayVisionPanel == "none")
+            @if (Model.enrollBtn2)
             {
-                <input class="toggleBtn" type="image" src="~/images/toggle-vision-panel-off.png" />
+                <button type="submit" id="enrollBtn2" onclick="RecVoice(this.id)" disabled name="intent" value="Reco2">Voice 2</button>
             }
             else
             {
-                <input class="toggleBtn" type="image" src="~/images/toggle-vision-panel-on.png" />
+                <button type="submit" id="enrollBtn2" onclick="RecVoice()" name="intent" value="Reco2">Voice 2&#10004;</button>
             }
-        </form>
-        <form method="post" asp-page-handler="OpenAddFacePanel">
-            @if (Model.displayFacePanel == "none")
-            {
-                <input class="toggleBtn" type="image" src="~/images/toggle-addFace-panel-off.png" />
-            }
-            else
-            {
-                <input class="toggleBtn" type="image" src="~/images/toggle-addFace-panel-on.png" />
-            }
-        </form>
-        <form method="post" asp-page-handler="Test">
-            @if (Model.displayFacePanel == "none")
-            {
-                <input class="toggleBtn" type="image" src="~/images/toggle-voice-panel-off.png" />
-            }
-            else
-            {
-                <input class="toggleBtn" type="image" src="~/images/toggle-voice-panel-on.png" />
-            }
+            <br /><br />
+            <button type="submit" id="confEnroll" name="intent" disabled value="ConfEnroll">Confirm Enrollment</button>
+            <button id="showEnrolled" type="submit" name="intent" onclick="ShowEnrollments();" value="GetEnroll">View Enrollments</button>
         </form>
     </div>
+</div>
+
+<div id="enrolledVoices" class="divEffects" style="display: @Model.showEnrollment;">
+    <form method="post" asp-page-handler="Instruction">
+        <i id="close" onclick="CloseWindow('enrolledVoices');" class="fas fa-times-circle fa-lg"></i>
+        <input id="profileId" type="text" name="text" hidden value="" />
+        <table>
+            <tr>
+                <th colspan="1">Name</th>
+                <th colspan="1">Description</th>
+                <th colspan="2">Modify</th>
+            </tr>
+            @for (int i = 0; i < Model.speechProfileIds.Count; i++)
+            {
+                <tr>
+                    <td>
+                        @Model.speechProfileNames[i]
+                    </td>
+                    <td>
+                        @Model.speechProfileDescs[i]
+                    </td>
+                    <td>
+                        <button id="edit_@i" type="button" class="edit">Edit</button>
+                    </td>
+                    <td>
+                        <button id="delete_@i" class="delete" type="submit" name="intent" onclick="AssignProfileId('@Model.speechProfileIds[i]');" value="DelProfile">Delete</button>
+                    </td>
+                </tr>
+            }
+        </table>
+    </form>
+</div>
+
+<div id="updKB" class="divEffects" style="display: @Model.showUpdKBWindow; ">
+    <form id="QnAForm" method="post" asp-page-handler="Instruction">
+        <i id="close" onclick="CloseWindow('updKB');" class="fas fa-times-circle fa-lg"></i>
+        <!--input text fields for Q and A created with javascript!-->
+        <input id="QnA" type="text" hidden name="text" />
+        <br class="brIn" />
+        <button id="submitQnA" type="button" onclick="UpdateKB();">Submit</button>
+        <input type="text" name="intent" hidden value="UpdateKB" />
+        <button id="addQnA" type="button" onclick="AddQnA();">Add QnA</button>
+    </form>
+</div>
+
+<!--**********************************************************************************************--->
+
+<div id="toggleDiv">
+    <form method="post" asp-page-handler="OpenControlPanel">
+        @if (Model.displayControlPanel == "none")
+        {
+            <input class="toggleBtn" type="image" src="~/images/toggle-control-panel-off.png" />
+        }
+        else
+        {
+            <input class="toggleBtn" type="image" src="~/images/toggle-control-panel-on.png" />
+        }
+    </form>
+    <form method="post" asp-page-handler="OpenVisionPanel">
+        @if (Model.displayVisionPanel == "none")
+        {
+            <input class="toggleBtn" type="image" src="~/images/toggle-vision-panel-off.png" />
+        }
+        else
+        {
+            <input class="toggleBtn" type="image" src="~/images/toggle-vision-panel-on.png" />
+        }
+    </form>
+    <form method="post" asp-page-handler="OpenAddFacePanel">
+        @if (Model.displayFacePanel == "none")
+        {
+            <input class="toggleBtn" type="image" src="~/images/toggle-addFace-panel-off.png" />
+        }
+        else
+        {
+            <input class="toggleBtn" type="image" src="~/images/toggle-addFace-panel-on.png" />
+        }
+    </form>
+    <form method="post" asp-page-handler="OpenVoicePanel">
+        @if (Model.displayVoicePanel == "none")
+        {
+            <input class="toggleBtn" type="image" src="~/images/toggle-voice-panel-off.png" />
+        }
+        else
+        {
+            <input class="toggleBtn" type="image" src="~/images/toggle-voice-panel-on.png" />
+        }
+    </form>
+</div>
 
     <div id="carInterior">
         <img id="interior" src="~/images/cartoon-car-interior.png" />

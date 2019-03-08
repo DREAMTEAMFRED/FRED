@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,6 +14,7 @@ namespace FRED.Utility
         public string displayControlPanel = "none";
         public string displayVisionPanel = "none";
         public string displayFacePanel = "none";
+        public string displayVoicePanel = "none";
         public string displayErrorPanel = "none";
         public string displayTakePicPanel = "none";
         public string displayAddPersonPanel = "none";
@@ -24,6 +26,137 @@ namespace FRED.Utility
         public string loginError = "";
         public string createError = "";
 
+        /***************Mark's Variables*************/
+        static string enrDisplay = "none"; // controls the enroll display popoup window
+        static string recording = "none";
+        static bool voiceBtn1 = true;
+        static bool voiceBtn2 = true;
+        static string upKbDisplay = "none"; // controls the update KB display popup window
+        private static string enrollmentDisplay = "none";
+        public List<string> SpeechProfileIds = new List<string>();
+        public List<string> SpeechProfileNames = new List<string>();
+        public List<string> SpeechProfileDescs = new List<string>();
+
+        public string ProfileName { get; set; }
+        public string ProfileDesc { get; set; }
+        /***************************************************************/
+        public void SaveData(byte[] data)
+        {
+            try
+            {
+                File.WriteAllBytes(@"record.wav", data);
+            }
+            catch
+            {
+                //do nothing!
+            }
+        }
+
+        public void SaveText(byte[] data)
+        {
+            File.WriteAllBytes(@"speaker_recog.txt", data);
+        }
+
+        public string GetRecordingStat()
+        {
+            return recording;
+        }
+
+        public void SetRecordingStat(string recordDisplay)
+        {
+            recording = recordDisplay;
+        }
+
+        public List<string> GetSpeechProfileNames()
+        {
+            return SpeechProfileNames;
+        }
+
+        public void SetSpeechProfileNames(List<string> SpeechProfileName)
+        {
+            SpeechProfileNames = SpeechProfileName;
+        }
+
+        public List<string> GetSpeechProfileDescs()
+        {
+            return SpeechProfileDescs;
+        }
+
+        public void SetSpeechProfileDescs(List<string> SpeechProfileDesc)
+        {
+            SpeechProfileDescs = SpeechProfileDesc;
+        }
+
+        public List<string> GetSpeechProfileIds()
+        {
+            return SpeechProfileIds;
+        }
+
+        public void SetSpeechProfileIds(List<string> SpeechProfileId)
+        {
+            SpeechProfileIds = SpeechProfileId;
+        }
+
+        public string GetEnrollmentDisplay()
+        {
+            return enrollmentDisplay;
+        }
+
+        public void SetEnrollmentDisplay(string enrollDisplay)
+        {
+            enrollmentDisplay = enrollDisplay;
+        }
+
+        public string GetUpdKBDisplay()
+        {
+            return upKbDisplay;
+        }
+
+        public void SetUpdKBDisplay(string displayStat)
+        {
+            upKbDisplay = displayStat;
+        }
+
+        public bool GetVoiceBtn1()
+        {
+            return voiceBtn1;
+        }
+
+        public void SetVoiceBtn1(bool voiceBtn)
+        {
+            voiceBtn1 = voiceBtn;
+        }
+        public bool GetVoiceBtn2()
+        {
+            return voiceBtn2;
+        }
+
+        public void SetVoiceBtn2(bool voiceBtn)
+        {
+            voiceBtn2 = voiceBtn;
+        }
+
+        public string GetEnrollDisplay()
+        {
+            return enrDisplay;
+        }
+
+        public void SetEnrollDisplay(string displayStat)
+        {
+            enrDisplay = displayStat;
+        }
+
+        public void SetVoicePanel(string display)
+        {
+            displayVoicePanel = display;
+        }
+
+        public string GetVoicePanelStatus()
+        {
+            return displayVoicePanel;
+        }
+
+        /***************************************************/
         public void SetError(string error)
         {
             this.error = error;

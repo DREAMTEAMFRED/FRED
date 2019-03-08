@@ -1,5 +1,8 @@
 ﻿@page
 @model IndexModel
+@{
+    ViewData["Title"] = "Home";
+}
 
 <header>
     <img src="~/images/fred-title.png" />
@@ -18,7 +21,7 @@
     <div id="userPass">
         <span id="username">Username:</span>
         <span id="password">Password:</span>
-    </div>    
+    </div>
     <div id="login">
         <form method="post" asp-page-handler="Login">
             <input class="login" type="text" name="username" value="username" />
