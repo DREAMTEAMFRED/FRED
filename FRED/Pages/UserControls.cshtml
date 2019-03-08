@@ -146,7 +146,7 @@
     </div>
 </div>
 
-<div id="voicePanel" style="display: @Model.displayVoicePanel;">
+<div id="voicePanel" style="display: @Program.Temp.displayVoicePanel;">
     <div id="closeVisionPanel">
         <form method="post" asp-page-handler="CloseVoicePanel" id="closeVoicePanelForm">
             <i class="far fa-times-circle" onclick="CloseVoicePanel()"></i>
@@ -220,26 +220,26 @@
         </table>
     </div>
 
-        <div id="facePanelBottom">
-            <div id="facePanelBottomLeft">
-                <i class="fas fa-user-plus" onclick="OpenAddPersonPanel()"></i>
-                <form method="post" asp-page-handler="OpenAddPersonPanel" id="addPersonForm"></form>
-            </div>
-            <div id="facePanelBottomMiddle" onch="ToggleFacePanel()">
-                @if (Program.Temp.GetTrainingStatus() != "succeeded")
-                {
-                    <span calss="gold" id="trainingStatus">Training Status - @Program.Temp.GetTrainingStatus()</span>
-                }
-            </div>
-            <div id="facePanelBottomRight">
-                <!--
-                <a href="./UserControls">
-                    <i onclick="Refresh()" class="fas fa-sync-alt"></i>
-                </a>
-                -->
-            </div>
+    <div id="facePanelBottom">
+        <div id="facePanelBottomLeft">
+            <i class="fas fa-user-plus" onclick="OpenAddPersonPanel()"></i>
+            <form method="post" asp-page-handler="OpenAddPersonPanel" id="addPersonForm"></form>
+        </div>
+        <div id="facePanelBottomMiddle" onch="ToggleFacePanel()">
+            @if (Program.Temp.GetTrainingStatus() != "succeeded")
+            {
+                <span calss="gold" id="trainingStatus">Training Status - @Program.Temp.GetTrainingStatus()</span>
+            }
+        </div>
+        <div id="facePanelBottomRight">
+            <!--
+            <a href="./UserControls">
+                <i onclick="Refresh()" class="fas fa-sync-alt"></i>
+            </a>
+            -->
         </div>
     </div>
+    
 
     <div id="addPersonPanel" style="display: @Model.displayAddPersonPanel;">
         <div id="addPersonPanelTop">
@@ -333,7 +333,8 @@
         </div>
     </div>
 </div>
--->
+
+
 
 <!--Mark's html-->
 <div id="errMsg" class="divEffects" style="display: @Model.errorMsg;">
@@ -454,7 +455,7 @@
         }
     </form>
     <form method="post" asp-page-handler="OpenVoicePanel">
-        @if (Model.displayVoicePanel == "none")
+        @if (Program.Temp.displayVoicePanel == "none")
         {
             <input class="toggleBtn" type="image" src="~/images/toggle-voice-panel-off.png" />
         }

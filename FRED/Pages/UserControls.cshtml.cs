@@ -168,7 +168,7 @@ namespace FRED.Pages
 
         public void OnPostOpenVoicePanel()
         {
-            if (displayVoicePanel == "none")
+            if (Program.Temp.displayVoicePanel == "none")
                 Program.Temp.SetVoicePanel("grid");
             else
                 Program.Temp.SetVoicePanel("none");
