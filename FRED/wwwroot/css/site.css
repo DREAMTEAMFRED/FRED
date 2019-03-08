@@ -98,7 +98,7 @@ header {
         height: 35px;
         border: 1px solid #ccc;
         border-radius: 4px;
-        font-size: 1em;
+        font-size: 1.7em;
         box-shadow: -10px 10px 10px #000;
     }
     .loginButton:hover 
@@ -244,10 +244,11 @@ header {
     
 }
     #interior {        
-        position: fixed;
+        position: absolute;
+        width: 70%;
         top: 460px;
         z-index: 4;
-        margin-left: calc(50% - 560px);
+        margin-left: calc(50% - 35%);
     }
     #screen {
         position: fixed;

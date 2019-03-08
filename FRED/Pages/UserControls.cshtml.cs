@@ -138,6 +138,8 @@ namespace FRED.Pages
         public void OnPostCloseVisionPanel()
         {
             Program.Temp.SetVisionPanel("none");
+            Program.Temp.SetEnrollmentDisplay("none");
+            Program.Temp.SetEnrollDisplay("none");
             Response.Redirect("./UserControls");
         }
 
