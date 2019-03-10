@@ -32,15 +32,12 @@ function BouncingCar() {
     }
 }
 
+
 let KeyCtrl;
 
 function KeyboardCtrl(status) {    
     KeyCtrl = status;
 }
-
-let slider = document.getElementById("mySpeed");
-let output = document.getElementById("speed");
-output.innerHTML = slider.value; // Display the default slider value
 
 let particles = new Array();
 let car = document.getElementById('carContainer');
@@ -58,10 +55,21 @@ for (let i = 0; i < 25; i++) {
     particles.push(exhaust);    
 }
 
-slider.onchange = function () {    
-    this.form.submit();
-}
+let exhaustTimer = setInterval('BlowSmoke()', 25);
+let allSmoke = document.getElementsByClassName('exhaustSmoke');
 
+function BlowSmoke() {
+    for (let i = 0; i < particles.length; i++) {
+        particles[i].Move();
+        let y = particles[i].y;
+        let x = particles[i].x;
+        $(allSmoke[i]).animate(
+            {
+                top: y,
+                left: x
+            }, 10, 'swing');
+    }
+} 
 
 //let faceIsOpen = false;
 
@@ -311,65 +319,6 @@ document.body.onkeydown = function (e) {
             }
         }
     };
-
-
-
-////// * Car bouncing * \\\\\\
-
-setInterval('BouncingCar()', 150);
-let bounce = document.getElementById('robotCar');
-let dir = 'up';
-let topPos = 150;
-
-function BouncingCar() {
-    if (dir == 'up') {
-        $(bounce).animate(
-            {
-                top: topPos
-            }, 50, 'swing')
-        dir = 'down'
-    }
-    else {
-        $(bounce).animate(
-            {
-                top: topPos - 2
-            }, 50, 'swing')
-        dir = 'up'
-    }
-}
-
-//////  * Create car exhaust *  \\\\\\
-
-let particles = new Array();
-let car = document.getElementById('carContainer');
-
-for (let i = 0; i < 25; i++) {
-    let exhaust = new Exhaust(470, 500);
-    let exhaustPart = document.createElement('div');
-    exhaustPart.setAttribute('class', 'exhaustSmoke');
-    exhaustPart.setAttribute('style', 'width: ' + exhaust.size + 'px;' +
-        'height: ' + exhaust.size + 'px;');
-    car.appendChild(exhaustPart);
-    particles.push(exhaust);    
-}
-
-let exhaustTimer = setInterval('BlowSmoke()', 25);
-let allSmoke = document.getElementsByClassName('exhaustSmoke');
-
-function BlowSmoke() {
-    for (let i = 0; i < particles.length; i++) {
-        particles[i].Move();
-        let y = particles[i].y;
-        let x = particles[i].x;
-        $(allSmoke[i]).animate(
-            {
-                top: y,
-                left: x
-            }, 10, 'swing');
-    }
-} 
-
-
 
 function OpenAddPersonPanel() {
     $('#addPersonForm').submit();
