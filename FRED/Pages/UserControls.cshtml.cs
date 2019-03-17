@@ -659,7 +659,7 @@ namespace FRED.Pages
             try
             {
                 string comm = message;
-                if (message == "Speak" || message == "Reco1" || message == "Reco2" || message == "UpdateKB" || message == "DelProfile")
+                if (message == "Speak" || message == "Reco1" || message == "Reco2" || message == "UpdateKB" || message == "DelProfile" || message == "UpdateProfileInfo")
                 {
                     message = message + "*" + textEntry;
                 }
@@ -749,7 +749,7 @@ namespace FRED.Pages
                     Program.Temp.SetEnrollmentDisplay("none");
                     Program.Temp.SetEnrollDisplay("none");
                 }
-                else if (comm == "DelProfile")
+                else if (comm == "DelProfile" || comm == "UpdateProfileInfo")
                 {
                     Thread.Sleep(3000);
                     OnPostInstruction("GetEnroll", null);

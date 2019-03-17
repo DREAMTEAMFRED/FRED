@@ -950,7 +950,7 @@ i.deleteQnA:hover
     width: 500px;
     left: calc(50% - 250px);
     opacity: 0.85;
-    color: white;
+    color: indigo;
     box-shadow: 0 4px 11px #999;
 }
 
@@ -996,7 +996,6 @@ table
     border-radius: 5px;
     box-shadow: 0 4px 11px #999;
 }
-
 #errMsg
 {
     position: absolute; 
@@ -1013,4 +1012,8 @@ table
 img
 {
     width: 50%
+}
+#submitProfileEdit
+{
+    margin-bottom: 2px; 
 }

@@ -6,6 +6,9 @@ let idVar = 0;
 let idArray = new Array();
 let errorMsg = null;
 let enrollTexts;
+let count = 0;
+let profileArray = [];
+let profileEntry;
 /***********************/
 
 ////// * Car bouncing * \\\\\\
@@ -582,7 +585,24 @@ if (document.title == "UserControls - FRED") {
 
     function AssignProfileId(profileId) // assigns correct profile id to hidden text field value
     {
-        $("#profileId").val(profileId);
+        if (profileId == "") {
+            let updateInfo = "";
+            for (let i = 0; i < profileArray.length; i++) {
+                updateInfo += profileArray[i] + ":";
+                updateInfo += document.getElementById("profileId_" + profileArray[i]).value + ":";
+                updateInfo += document.getElementById("nameInp_" + profileArray[i]).value + ":";
+                if (i == profileArray.length - 1) {
+                    updateInfo += document.getElementById("descInp_" + profileArray[i]).value;
+                }
+                else {
+                    updateInfo += document.getElementById("descInp_" + profileArray[i]).value + ";";
+                }
+            }
+            $("#profileId").val(updateInfo);
+        }
+        else {
+            $("#profileId").val(profileId);
+        }
     }
 
     if (document.getElementById("errMsg").style.display == "block") {
@@ -594,5 +614,45 @@ if (document.title == "UserControls - FRED") {
         setTimeout(function () {
             $("#errMsg").fadeOut(2000)
         }, 3000);
+    }
+
+    // enabling edit button on enrolled voice name and description
+    function Edit(value)
+    {
+        count = value * 2;
+        if (profileArray.includes(value))
+        {
+            let indexPos = profileArray.indexOf(value);
+            profileArray.splice(indexPos, 1);
+            document.getElementById("edit_" + value).innerHTML = "Edit";
+            document.getElementById("nameInp_" + value).setAttribute("hidden", "");
+            document.getElementById("nameInp_" + value).removeAttribute("required");
+            document.getElementById("descInp_" + value).setAttribute("hidden", "");
+            document.getElementById("descInp_" + value).removeAttribute("required");
+            profileEntry[count].removeAttribute("hidden");
+            profileEntry[count + 1].removeAttribute("hidden");
+        }
+        else
+        {
+            document.getElementById("nameInp_" + value).removeAttribute("hidden");
+            document.getElementById("nameInp_" + value).setAttribute("required", "");
+            document.getElementById("descInp_" + value).removeAttribute("hidden");
+            document.getElementById("descInp_" + value).setAttribute("required", "");
+            profileEntry = document.getElementsByClassName("nameDesc");
+            profileEntry[count].setAttribute("hidden", "");
+            profileEntry[count + 1].setAttribute("hidden", "");
+            document.getElementById("edit_" + value).innerHTML = "Cancel";
+            count = 0;
+            profileArray.push(value);
+        }
+
+        if (profileArray.length > 0)
+        {
+            document.getElementById("submitProfileEdit").removeAttribute("hidden");
+        }
+        else
+        {
+            document.getElementById("submitProfileEdit").setAttribute("hidden", "");
+        }
     }
 }
