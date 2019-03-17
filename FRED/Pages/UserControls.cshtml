@@ -393,11 +393,11 @@
                 <tr>
                     <td id="name_@i">
                         <p class="nameDesc">@Model.speechProfileNames[i]</p>
-                        <input id="nameInp_@i" hidden placeholder=@Model.speechProfileNames[i] />
+                        <input class="enrolledVoicesInput" id="nameInp_@i" hidden placeholder=@Model.speechProfileNames[i] />
                     </td>
                     <td id="desc_@i">
                         <p class="nameDesc">@Model.speechProfileDescs[i]</p>
-                        <input id="descInp_@i" hidden placeholder="@Model.speechProfileDescs[i]" />
+                        <input class="enrolledVoicesInput" id="descInp_@i" hidden placeholder="@Model.speechProfileDescs[i]" />
                     </td>
                     <td>
                         <button id="edit_@i" onclick="Edit(this.value);" type="button" class="edit" value="@i">Edit</button>

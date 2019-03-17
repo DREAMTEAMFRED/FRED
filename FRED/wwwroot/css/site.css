@@ -950,13 +950,16 @@ i.deleteQnA:hover
     width: 500px;
     left: calc(50% - 250px);
     opacity: 0.85;
-    color: indigo;
+    color: white;
     box-shadow: 0 4px 11px #999;
 }
-
-table
+.enrolledVoicesInput
 {
-    width: 100%; 
+    color: black;
+}
+table 
+{
+    width: 100%;
     border-collapse: collapse;
 }
     td, th 
@@ -1015,5 +1018,6 @@ img
 }
 #submitProfileEdit
 {
-    margin-bottom: 2px; 
+    margin-bottom: 2px;
+    color: black;
 }
